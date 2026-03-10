@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.mikeislearning.wedding-app"
+      "bundleIdentifier": "com.mikeislearning.wedding-app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +32,12 @@
       "bundler": "metro",
       "output": "single",
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b36f5ea7-3ec3-4114-b612-1158ebb7f310"
+      }
+    },
+    "owner": "mikeislearning"
   }
 }

@@ -35,13 +35,9 @@ export default function QuizScreen() {
 
   const handleNext = () => {
     if (isLastQuestion) {
-      // score state may not yet reflect the last answer (setState is async),
-      // so compute the final score from current score + whether last answer was correct
-      const lastAnswerBonus = selectedAnswer === currentQuestion.correctAnswer ? 1 : 0;
-      const finalScore = score + lastAnswerBonus;
       router.replace({
         pathname: '/results',
-        params: { name, score: finalScore.toString() },
+        params: { name, score: score.toString() },
       });
     } else {
       setCurrentIndex(prev => prev + 1);
