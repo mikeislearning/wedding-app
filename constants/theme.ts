@@ -1,0 +1,16 @@
+export const colors = {
+  maroon: '#6B0F1A',
+  maroonDark: '#4A0812',
+  maroonLight: '#8B1A28',
+  gold: '#C9A84C',
+  goldLight: '#E8D5A3',
+  cream: '#FAF6F0',
+  creamDark: '#F0E8DC',
+  white: '#FFFFFF',
+  text: '#2C1810',
+  textLight: '#6B5B52',
+  correct: '#2D6A4F',
+  correctLight: '#D8F3DC',
+  incorrect: '#9B1D1D',
+  incorrectLight: '#FFE8E8',
+};

@@ -1,0 +1,219 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "category": "couples",
+      "question": "Where was Amber and Alan's first date?",
+      "options": ["Earl's", "The Forks", "Across The Board", "Starbucks"],
+      "correctAnswer": "Earl's"
+    },
+    {
+      "id": 2,
+      "category": "couples",
+      "question": "Where was Amber and Alan's first trip together?",
+      "options": ["Montreal", "Halifax", "Toronto", "Equatorial Guinea"],
+      "correctAnswer": "Halifax"
+    },
+    {
+      "id": 3,
+      "category": "couples",
+      "question": "How long until one of them (OK, it was Alan) said, \"I love you\"?",
+      "options": ["Less than a week", "One month", "One year", "During the proposal"],
+      "correctAnswer": "Less than a week"
+    },
+    {
+      "id": 4,
+      "category": "couples",
+      "question": "Which music artist did Amber and Alan travel to see?",
+      "options": ["Noah Kahan", "Radiohead", "Lorde", "Weird Al"],
+      "correctAnswer": "Lorde"
+    },
+    {
+      "id": 5,
+      "category": "couples",
+      "question": "Who did Amber and Alan dress up as for their first Halloween together?",
+      "options": [
+        "Animated characters: Kiki's Delivery Service's Kiki and Tombo",
+        "Video game characters: It Takes Two's Cody and May",
+        "Movie characters: Ferris Bueller's Day Off's Ferris and Sloane",
+        "Book characters: Lord of the Rings' Aragorn and Arwen"
+      ],
+      "correctAnswer": "Video game characters: It Takes Two's Cody and May"
+    },
+    {
+      "id": 6,
+      "category": "couples",
+      "question": "Where did the proposal happen?",
+      "options": ["At a restaurant", "On a bridge", "On the street", "At a museum"],
+      "correctAnswer": "On a bridge"
+    },
+    {
+      "id": 7,
+      "category": "couples",
+      "question": "On their second date, what did Alan bring for Murfy?",
+      "options": ["A dog toy", "A box of treats", "A prosthetic leg", "Another dog"],
+      "correctAnswer": "A box of treats"
+    },
+    {
+      "id": 8,
+      "category": "couples",
+      "question": "Which dating app did Amber and Alan trust to their fate?",
+      "options": ["Tinder", "Bumble", "Hinge", "J-Date"],
+      "correctAnswer": "Hinge"
+    },
+    {
+      "id": 9,
+      "category": "couples",
+      "question": "Which creature has Amber brazenly declared as Alan's most identifiable spirit animal?",
+      "options": ["Arctic Fox", "Doberman Pinscher", "Siamese Cat", "Blue Heron"],
+      "correctAnswer": "Blue Heron"
+    },
+    {
+      "id": 10,
+      "category": "couples",
+      "question": "After enduring his endless complaints, what gift did Amber get for Alan for their first Christmas together?",
+      "options": ["AirTags", "Foot massager", "Noise cancelling headphones", "Earplugs"],
+      "correctAnswer": "Foot massager"
+    },
+    {
+      "id": 11,
+      "category": "alan",
+      "question": "What is the name of Alan's extremely low-level beer league hockey team?",
+      "options": ["Puck Bunnies", "Seal Team Sticks", "Tuesday Nooners", "Atlanta Thrashers 2.0"],
+      "correctAnswer": "Tuesday Nooners"
+    },
+    {
+      "id": 12,
+      "category": "alan",
+      "question": "What Dungeons and Dragons edition did Alan first play as a young nerdy teenager?",
+      "options": ["2nd Edition", "3rd Edition", "4th Edition", "There are different editions?!"],
+      "correctAnswer": "2nd Edition"
+    },
+    {
+      "id": 13,
+      "category": "alan",
+      "question": "How many times has Alan won his fantasy hockey league?",
+      "options": ["0", "1", "2", "3"],
+      "correctAnswer": "3"
+    },
+    {
+      "id": 14,
+      "category": "alan",
+      "question": "Alan's favourite video game of all time is:",
+      "options": ["Halo: Combat Evolved", "Baldur's Gate", "Rock Band", "Tex Murphy: The Pandora Directive"],
+      "correctAnswer": "Tex Murphy: The Pandora Directive"
+    },
+    {
+      "id": 15,
+      "category": "alan",
+      "question": "Alan's meager acting career landed him on some incredibly unmemorable movies and TV shows. Which one was NOT an actual production he appeared in?",
+      "options": ["Bravetown", "Todd and the Book of Pure Evil", "The Don Cherry Story", "Wrong Turn 6"],
+      "correctAnswer": "Wrong Turn 6"
+    },
+    {
+      "id": 16,
+      "category": "alan",
+      "question": "Which actor did Alan get to work alongside for about ten minutes total?",
+      "options": ["Laura Dern", "Jared Keeso", "Jon Hamm", "Whoopi Goldberg"],
+      "correctAnswer": "Laura Dern"
+    },
+    {
+      "id": 17,
+      "category": "alan",
+      "question": "Where was Alan's first job?",
+      "options": ["McDonalds", "The Brick", "Future Shop", "Superstore"],
+      "correctAnswer": "The Brick"
+    },
+    {
+      "id": 18,
+      "category": "alan",
+      "question": "When Alan was nearly removed from a Manitoba Moose hockey game for drunkenly heckling the opposing team, which country was he slandering for their lack of hockey talent and low GDP?",
+      "options": ["Finland", "Slovakia", "Latvia", "Cote D'ivoire"],
+      "correctAnswer": "Latvia"
+    },
+    {
+      "id": 19,
+      "category": "alan",
+      "question": "What is Alan's go-to pizza order?",
+      "options": ["Chicken and banana peppers", "Bacon and mushroom", "Ham and pineapple", "Feta and pineapple"],
+      "correctAnswer": "Chicken and banana peppers"
+    },
+    {
+      "id": 20,
+      "category": "alan",
+      "question": "When the Winnipeg Jets were cast out of the NHL, which team did Alan move his allegiance to?",
+      "options": ["Toronto Maple Leafs", "Vancouver Canucks", "Ottawa Senators", "Montreal Canadiens"],
+      "correctAnswer": "Montreal Canadiens"
+    },
+    {
+      "id": 21,
+      "category": "amber",
+      "question": "What is Amber's favourite Home Alone movie?",
+      "options": ["Home Alone", "Home Alone 2", "Home Alone 3", "She's never seen any of them."],
+      "correctAnswer": "Home Alone 3"
+    },
+    {
+      "id": 22,
+      "category": "amber",
+      "question": "What is the highest Amber ever jumped on a horse?",
+      "options": ["2 feet", "3 feet", "4 feet", "5 feet"],
+      "correctAnswer": "4 feet"
+    },
+    {
+      "id": 23,
+      "category": "amber",
+      "question": "What was the name of the horse Amber first leased?",
+      "options": ["Bravo", "Alomar", "General", "Truffles"],
+      "correctAnswer": "Alomar"
+    },
+    {
+      "id": 24,
+      "category": "amber",
+      "question": "Where was the main place Amber went camping as a kid?",
+      "options": ["Westhawk", "Rushing River", "Whiteshell", "Falcon Lake"],
+      "correctAnswer": "Falcon Lake"
+    },
+    {
+      "id": 25,
+      "category": "amber",
+      "question": "How many pets did Amber own in her lifetime? (Not including fish!)",
+      "options": ["3", "6", "13", "16"],
+      "correctAnswer": "13"
+    },
+    {
+      "id": 26,
+      "category": "amber",
+      "question": "90% of the music Amber plays in the car is basically from three artists. Which one is NOT in that group of three?",
+      "options": ["Lorde", "Noah Kahan", "City and Colour", "Phoebe Bridgers"],
+      "correctAnswer": "Phoebe Bridgers"
+    },
+    {
+      "id": 27,
+      "category": "amber",
+      "question": "Which of the following was NOT on 15 year old Amber's 'Instructions on how to win my heart: For Dummies' list?",
+      "options": ["Make me laugh", "Take a shower", "Be a gentleman", "Have a job"],
+      "correctAnswer": "Have a job"
+    },
+    {
+      "id": 28,
+      "category": "amber",
+      "question": "If Alan sees anything in THIS flavour, he knows to get it for Amber:",
+      "options": ["Sweet chili", "Dill pickle", "Ranch", "Jalapeno cheddar"],
+      "correctAnswer": "Dill pickle"
+    },
+    {
+      "id": 29,
+      "category": "amber",
+      "question": "Amber has had many jobs, which one of these did she NOT work as?",
+      "options": ["Assistant Manager at Quarks Shoes", "Groom at Assiniboia Downs", "Cashier at Sobeys", "Cast member at Cinema City"],
+      "correctAnswer": "Cashier at Sobeys"
+    },
+    {
+      "id": 30,
+      "category": "amber",
+      "question": "What was the highlight of Amber's New Zealand trip?",
+      "options": ["Going to Hobbiton", "Galloping a horse down the beach", "Black water rafting in the glow worm caves", "Not having to tip at restaurants"],
+      "correctAnswer": "Going to Hobbiton"
+    }
+  ]
+}
