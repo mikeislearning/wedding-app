@@ -5,14 +5,18 @@
       "category": "couples",
       "question": "Where was Amber and Alan's first date?",
       "options": ["Earl's", "The Forks", "Across The Board", "Starbucks"],
-      "correctAnswer": "Earl's"
+      "correctAnswer": "Earl's",
+      "caption": "I was trying to find a place that was near her, and since she lived in River Park South, that left Earl's or Tim Hortons. Fortunately, I'm a man of class. - alan\nUhm, we also have Royal Pizza? - Amber",
+      "images": ["q01-earls.jpg"]
     },
     {
       "id": 2,
       "category": "couples",
       "question": "Where was Amber and Alan's first trip together?",
       "options": ["Montreal", "Halifax", "Toronto", "Equatorial Guinea"],
-      "correctAnswer": "Halifax"
+      "correctAnswer": "Halifax",
+      "caption": "We went to PEI too!! - amber\nAnd spent 10 exhilarating minutes inside New Brunswick. - alan",
+      "images": ["q02-halifax.jpg"]
     },
     {
       "id": 3,
@@ -26,7 +30,8 @@
       "category": "couples",
       "question": "Which music artist did Amber and Alan travel to see?",
       "options": ["Noah Kahan", "Radiohead", "Lorde", "Weird Al"],
-      "correctAnswer": "Lorde"
+      "correctAnswer": "Lorde",
+      "images": ["q04-lorde.jpg"]
     },
     {
       "id": 5,
@@ -35,17 +40,19 @@
       "options": [
         "Animated characters: Kiki's Delivery Service's Kiki and Tombo",
         "Video game characters: It Takes Two's Cody and May",
-        "Movie characters: Ferris Bueller's Day Off's Ferris and Sloane",
+        "Movie characters: Ferris Buehler's Day Off's Ferris and Sloane",
         "Book characters: Lord of the Rings' Aragorn and Arwen"
       ],
-      "correctAnswer": "Video game characters: It Takes Two's Cody and May"
+      "correctAnswer": "Video game characters: It Takes Two's Cody and May",
+      "images": ["q05-it-takes-two.jpg", "q05-costume.jpg"]
     },
     {
       "id": 6,
       "category": "couples",
       "question": "Where did the proposal happen?",
       "options": ["At a restaurant", "On a bridge", "On the street", "At a museum"],
-      "correctAnswer": "On a bridge"
+      "correctAnswer": "On a bridge",
+      "images": ["q06-proposal.jpg"]
     },
     {
       "id": 7,
@@ -66,70 +73,82 @@
       "category": "couples",
       "question": "Which creature has Amber brazenly declared as Alan's most identifiable spirit animal?",
       "options": ["Arctic Fox", "Doberman Pinscher", "Siamese Cat", "Blue Heron"],
-      "correctAnswer": "Blue Heron"
+      "correctAnswer": "Blue Heron",
+      "caption": "Offensive. - alan\nBut you have the crest! - amber"
     },
     {
       "id": 10,
       "category": "couples",
       "question": "After enduring his endless complaints, what gift did Amber get for Alan for their first Christmas together?",
-      "options": ["AirTags", "Foot massager", "Noise cancelling headphones", "Earplugs"],
-      "correctAnswer": "Foot massager"
+      "options": ["AirTags", "Foot massager", "Noise-cancelling headphones", "Earplugs"],
+      "correctAnswer": "Foot massager",
+      "caption": "Why would you need noise-cancelling headphones Alan??? -amber"
     },
     {
       "id": 11,
       "category": "alan",
       "question": "What is the name of Alan's extremely low-level beer league hockey team?",
       "options": ["Puck Bunnies", "Seal Team Sticks", "Tuesday Nooners", "Atlanta Thrashers 2.0"],
-      "correctAnswer": "Tuesday Nooners"
+      "correctAnswer": "Tuesday Nooners",
+      "caption": "And I'm the top scorer on this low-level team! Anyone care?? Anyone? - alan\nNo - amber",
+      "images": ["q11-tuesday-nooners.jpg"]
     },
     {
       "id": 12,
       "category": "alan",
       "question": "What Dungeons and Dragons edition did Alan first play as a young nerdy teenager?",
       "options": ["2nd Edition", "3rd Edition", "4th Edition", "There are different editions?!"],
-      "correctAnswer": "2nd Edition"
+      "correctAnswer": "2nd Edition",
+      "caption": "This question was weirdly important for him to include. - amber\nIt's important, damnit. - alan"
     },
     {
       "id": 13,
       "category": "alan",
       "question": "How many times has Alan won his fantasy hockey league?",
       "options": ["0", "1", "2", "3"],
-      "correctAnswer": "3"
+      "correctAnswer": "3",
+      "caption": "This answer is being submitted before I'm about to win fantasy hockey again this year, so it's a trick question, I guess. - alan"
     },
     {
       "id": 14,
       "category": "alan",
       "question": "Alan's favourite video game of all time is:",
       "options": ["Halo: Combat Evolved", "Baldur's Gate", "Rock Band", "Tex Murphy: The Pandora Directive"],
-      "correctAnswer": "Tex Murphy: The Pandora Directive"
+      "correctAnswer": "Tex Murphy: The Pandora Directive",
+      "images": ["q14-tex-murphy-merch.jpg", "q14-tex-murphy-collection.jpg"]
     },
     {
       "id": 15,
       "category": "alan",
-      "question": "Alan's meager acting career landed him on some incredibly unmemorable movies and TV shows. Which one was NOT an actual production he appeared in?",
+      "question": "Alan's meager acting career landed him in some incredibly unmemorable movies and TV shows. Which one was NOT an actual production he appeared in:",
       "options": ["Bravetown", "Todd and the Book of Pure Evil", "The Don Cherry Story", "Wrong Turn 6"],
-      "correctAnswer": "Wrong Turn 6"
+      "correctAnswer": "Wrong Turn 6",
+      "caption": "Me after getting my ass handed to me by \"young Don Cherry\" on CBC - alan",
+      "images": ["q15-acting.jpg"]
     },
     {
       "id": 16,
       "category": "alan",
-      "question": "Which actor did Alan get to work alongside for about ten minutes total?",
+      "question": "Which actor did Alan get to work alongside for about ten minutes total:",
       "options": ["Laura Dern", "Jared Keeso", "Jon Hamm", "Whoopi Goldberg"],
-      "correctAnswer": "Laura Dern"
+      "correctAnswer": "Laura Dern",
+      "caption": "Right before winning an Oscar, she appeared in a horrible little movie beside yours truly called \"Bravetown\" - alan"
     },
     {
       "id": 17,
       "category": "alan",
       "question": "Where was Alan's first job?",
       "options": ["McDonalds", "The Brick", "Future Shop", "Superstore"],
-      "correctAnswer": "The Brick"
+      "correctAnswer": "The Brick",
+      "caption": "My blue collar roots started early. - alan"
     },
     {
       "id": 18,
       "category": "alan",
       "question": "When Alan was nearly removed from a Manitoba Moose hockey game for drunkenly heckling the opposing team, which country was he slandering for their lack of hockey talent and low GDP?",
       "options": ["Finland", "Slovakia", "Latvia", "Cote D'ivoire"],
-      "correctAnswer": "Latvia"
+      "correctAnswer": "Latvia",
+      "caption": "Technically I did not get kicked out! I was only warned three times with increasing exasperation. - alan"
     },
     {
       "id": 19,
@@ -150,70 +169,85 @@
       "category": "amber",
       "question": "What is Amber's favourite Home Alone movie?",
       "options": ["Home Alone", "Home Alone 2", "Home Alone 3", "She's never seen any of them."],
-      "correctAnswer": "Home Alone 3"
+      "correctAnswer": "Home Alone 3",
+      "caption": "Growing up, I don't remember watching Home Alone 1 or 2, so to me this was THE Home Alone. This is the best one - and Roger Ebert agrees with me! - amber\nAnd now he's dead, sooo\u2026 - alan\nYou admitted you liked it - amber\nPlease stop - alan"
     },
     {
       "id": 22,
       "category": "amber",
       "question": "What is the highest Amber ever jumped on a horse?",
       "options": ["2 feet", "3 feet", "4 feet", "5 feet"],
-      "correctAnswer": "4 feet"
+      "correctAnswer": "4 feet",
+      "caption": "While I was more into dressage, I did dabble in some horse jumping, my highest fence jumped being 4 feet! - amber",
+      "images": ["q22-horse-jumping.jpg"]
     },
     {
       "id": 23,
       "category": "amber",
       "question": "What was the name of the horse Amber first leased?",
       "options": ["Bravo", "Alomar", "General", "Truffles"],
-      "correctAnswer": "Alomar"
+      "correctAnswer": "Alomar",
+      "caption": "I leased three horses during my years of horseback riding. First Alomar, then Bravo, then General. (Truffles was the first horse I took lessons on!) - amber",
+      "images": ["q23-alomar.jpg"]
     },
     {
       "id": 24,
       "category": "amber",
       "question": "Where was the main place Amber went camping as a kid?",
       "options": ["Westhawk", "Rushing River", "Whiteshell", "Falcon Lake"],
-      "correctAnswer": "Falcon Lake"
+      "correctAnswer": "Falcon Lake",
+      "caption": "Camping was a summer tradition for my family growing up. I would frequent the riding stables which is where my love of horses started.",
+      "images": ["q24-falcon-lake.jpg"]
     },
     {
       "id": 25,
       "category": "amber",
       "question": "How many pets did Amber own in her lifetime? (Not including fish!)",
       "options": ["3", "6", "13", "16"],
-      "correctAnswer": "13"
+      "correctAnswer": "13",
+      "caption": "From mice, to snakes, to cats & dogs, I've had them all! (Special shout out to my mom for being a good sport and helping out) - amber\nWhat is the answer if you INCLUDE fish??? - alan",
+      "images": ["q25-pets.jpg"]
     },
     {
       "id": 26,
       "category": "amber",
-      "question": "90% of the music Amber plays in the car is basically from three artists. Which one is NOT in that group of three?",
+      "question": "90% of the music Amber plays in the car is basically from three artists. Which one is not in that group of three?",
       "options": ["Lorde", "Noah Kahan", "City and Colour", "Phoebe Bridgers"],
-      "correctAnswer": "Phoebe Bridgers"
+      "correctAnswer": "Phoebe Bridgers",
+      "caption": "Okay more like 95% (Sorry Alan). - amber\nAt least 2 of 3 of your choices are good. - alan"
     },
     {
       "id": 27,
       "category": "amber",
-      "question": "Which of the following was NOT on 15 year old Amber's 'Instructions on how to win my heart: For Dummies' list?",
+      "question": "For a school assignment, which of the following was NOT on 14-year-old Amber's: \"Instructions on how to win my heart: For Dummies\" list:",
       "options": ["Make me laugh", "Take a shower", "Be a gentleman", "Have a job"],
-      "correctAnswer": "Have a job"
+      "correctAnswer": "Have a job",
+      "caption": "Lucky for me to have ended up with the funniest man ever (he smells okay too) - amber\nCurrently employed too! But apparently that doesn't matter. - alan",
+      "images": ["q27-win-heart.jpg"]
     },
     {
       "id": 28,
       "category": "amber",
-      "question": "If Alan sees anything in THIS flavour, he knows to get it for Amber:",
+      "question": "If Alan sees anything in THIS flavour, he knows to get it for Amber",
       "options": ["Sweet chili", "Dill pickle", "Ranch", "Jalapeno cheddar"],
       "correctAnswer": "Dill pickle"
     },
     {
       "id": 29,
       "category": "amber",
-      "question": "Amber has had many jobs, which one of these did she NOT work as?",
+      "question": "Amber has had many jobs, which one of these did she not work as?",
       "options": ["Assistant Manager at Quarks Shoes", "Groom at Assiniboia Downs", "Cashier at Sobeys", "Cast member at Cinema City"],
-      "correctAnswer": "Cashier at Sobeys"
+      "correctAnswer": "Cashier at Sobeys",
+      "images": ["q29-jobs.jpg"]
     },
     {
       "id": 30,
       "category": "amber",
       "question": "What was the highlight of Amber's New Zealand trip?",
       "options": ["Going to Hobbiton", "Galloping a horse down the beach", "Black water rafting in the glow worm caves", "Not having to tip at restaurants"],
-      "correctAnswer": "Going to Hobbiton"
+      "correctAnswer": "Going to Hobbiton",
+      "caption": "This was a tough one! A close battle, but Hobbiton takes the win. - amber",
+      "images": ["q30-hobbiton.jpg"]
     }
   ]
 }

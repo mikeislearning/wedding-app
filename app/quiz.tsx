@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 import { colors } from '../constants/theme';
 import { getRandomQuestions, Question } from '../utils/quiz';
+import { getQuestionImage } from '../utils/questionImages';
 
 export default function QuizScreen() {
   const { name } = useLocalSearchParams<{ name: string }>();
@@ -24,11 +25,15 @@ export default function QuizScreen() {
   const isLastQuestion = currentIndex === questions.length - 1;
   const progress = (currentIndex + 1) / questions.length;
 
-  const handleAnswer = (option: string) => {
+  const handleSelect = (option: string) => {
     if (answered) return;
     setSelectedAnswer(option);
+  };
+
+  const handleConfirm = () => {
+    if (!selectedAnswer || answered) return;
     setAnswered(true);
-    if (option === currentQuestion.correctAnswer) {
+    if (selectedAnswer === currentQuestion.correctAnswer) {
       setScore(prev => prev + 1);
     }
   };
@@ -47,7 +52,12 @@ export default function QuizScreen() {
   };
 
   const getOptionStyle = (option: string) => {
-    if (!answered) return styles.option;
+    if (!answered) {
+      if (option === selectedAnswer) {
+        return [styles.option, styles.optionSelected];
+      }
+      return styles.option;
+    }
     if (option === currentQuestion.correctAnswer) {
       return [styles.option, styles.optionCorrect];
     }
@@ -58,7 +68,12 @@ export default function QuizScreen() {
   };
 
   const getOptionTextStyle = (option: string) => {
-    if (!answered) return styles.optionText;
+    if (!answered) {
+      if (option === selectedAnswer) {
+        return [styles.optionText, styles.optionTextSelected];
+      }
+      return styles.optionText;
+    }
     if (option === currentQuestion.correctAnswer) {
       return [styles.optionText, styles.optionTextCorrect];
     }
@@ -69,9 +84,9 @@ export default function QuizScreen() {
   };
 
   const categoryLabel = {
-    couples: '💍 Couples',
-    alan: '🎮 Alan',
-    amber: '🐴 Amber',
+    couples: '\u{1F48D} Couples',
+    alan: '\u{1F3AE} Alan',
+    amber: '\u{1F434} Amber',
   }[currentQuestion.category] ?? currentQuestion.category;
 
   return (
@@ -109,7 +124,7 @@ export default function QuizScreen() {
               <TouchableOpacity
                 key={index}
                 style={getOptionStyle(option)}
-                onPress={() => handleAnswer(option)}
+                onPress={() => handleSelect(option)}
                 disabled={answered}
                 activeOpacity={0.8}
               >
@@ -117,6 +132,13 @@ export default function QuizScreen() {
               </TouchableOpacity>
             ))}
           </View>
+
+          {/* Confirm Button */}
+          {selectedAnswer && !answered && (
+            <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm} activeOpacity={0.85}>
+              <Text style={styles.confirmButtonText}>Lock In Answer</Text>
+            </TouchableOpacity>
+          )}
 
           {/* Feedback */}
           {answered && (
@@ -128,21 +150,42 @@ export default function QuizScreen() {
             ]}>
               {selectedAnswer === currentQuestion.correctAnswer ? (
                 <Text style={[styles.feedbackText, styles.feedbackTextCorrect]}>
-                  ✓ Correct!
+                  {'\u2713'} Correct!
                 </Text>
               ) : (
                 <Text style={[styles.feedbackText, styles.feedbackTextIncorrect]}>
-                  ✗ Incorrect — The answer was: {currentQuestion.correctAnswer}
+                  {'\u2717'} Incorrect {'\u2014'} The answer was: {currentQuestion.correctAnswer}
                 </Text>
               )}
             </View>
           )}
 
+          {/* Caption */}
+          {answered && currentQuestion.caption && (
+            <View style={styles.captionContainer}>
+              <Text style={styles.captionText}>{currentQuestion.caption}</Text>
+            </View>
+          )}
+
+          {/* Images */}
+          {answered && currentQuestion.images && currentQuestion.images.map((img, i) => {
+            const source = getQuestionImage(img);
+            if (!source) return null;
+            return (
+              <Image
+                key={i}
+                source={source}
+                style={styles.revealImage}
+                resizeMode="contain"
+              />
+            );
+          })}
+
           {/* Next Button */}
           {answered && (
             <TouchableOpacity style={styles.nextButton} onPress={handleNext} activeOpacity={0.85}>
               <Text style={styles.nextButtonText}>
-                {isLastQuestion ? 'See Results 🎉' : 'Next Question →'}
+                {isLastQuestion ? 'See Results \u{1F389}' : 'Next Question \u2192'}
               </Text>
             </TouchableOpacity>
           )}
@@ -250,6 +293,14 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  optionSelected: {
+    backgroundColor: '#FDF6E3',
+    borderColor: colors.gold,
+    borderWidth: 2.5,
+    shadowColor: colors.gold,
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+  },
   optionCorrect: {
     backgroundColor: colors.correctLight,
     borderColor: colors.correct,
@@ -269,6 +320,10 @@ const styles = StyleSheet.create({
     color: colors.maroon,
     lineHeight: 24,
   },
+  optionTextSelected: {
+    fontFamily: 'Lato_700Bold',
+    color: colors.maroon,
+  },
   optionTextCorrect: {
     fontFamily: 'Lato_700Bold',
     color: colors.correct,
@@ -279,6 +334,25 @@ const styles = StyleSheet.create({
   },
   optionTextDimmed: {
     color: colors.textLight,
+  },
+  confirmButton: {
+    backgroundColor: colors.gold,
+    borderRadius: 12,
+    paddingVertical: 18,
+    paddingHorizontal: 32,
+    alignItems: 'center',
+    marginBottom: 20,
+    shadowColor: colors.maroonDark,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  confirmButtonText: {
+    fontFamily: 'Lato_700Bold',
+    fontSize: 18,
+    color: colors.maroon,
+    letterSpacing: 0.5,
   },
   feedbackContainer: {
     borderRadius: 12,
@@ -305,6 +379,33 @@ const styles = StyleSheet.create({
   },
   feedbackTextIncorrect: {
     color: colors.incorrect,
+  },
+  captionContainer: {
+    backgroundColor: colors.white,
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 20,
+    borderLeftWidth: 3,
+    borderLeftColor: colors.gold,
+    shadowColor: colors.maroonDark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  captionText: {
+    fontFamily: 'Lato_400Regular',
+    fontSize: 15,
+    color: colors.textLight,
+    lineHeight: 24,
+    fontStyle: 'italic',
+  },
+  revealImage: {
+    width: '100%',
+    height: 280,
+    borderRadius: 12,
+    marginBottom: 16,
+    backgroundColor: colors.creamDark,
   },
   nextButton: {
     backgroundColor: colors.maroon,

@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(pnpm add:*)",
-      "Bash(pnpm install:*)"
+      "Bash(pnpm install:*)",
+      "Bash(brew install:*)",
+      "Bash(pdftoppm -v)",
+      "Bash(pdftotext:*)",
+      "Bash(pdfimages:*)",
+      "Bash(mkdir -p /tmp/wedding_pdf_pages)",
+      "Bash(pdftoppm -jpeg -r 150 /Users/michaelmacpherson/Documents/codings/wedding-app/Wedding_Trivia_2.pdf /tmp/wedding_pdf_pages/page)",
+      "Read(//tmp/**)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

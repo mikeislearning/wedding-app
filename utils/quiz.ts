@@ -6,6 +6,8 @@ export interface Question {
   question: string;
   options: string[];
   correctAnswer: string;
+  caption?: string;
+  images?: string[];
 }
 
 function shuffle<T>(arr: T[]): T[] {
