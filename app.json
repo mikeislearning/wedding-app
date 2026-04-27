@@ -16,7 +16,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.mikeislearning.wedding-app",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSMicrophoneUsageDescription": "This app uses the microphone for audio features."
       }
     },
     "android": {
