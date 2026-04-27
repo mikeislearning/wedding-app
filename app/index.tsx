@@ -1,40 +1,77 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Animated } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRef, useEffect } from 'react';
 import { colors } from '../constants/theme';
+import FloatingHearts from '../components/FloatingHearts';
+import PulseRing from '../components/PulseRing';
 
 const homeImage = require('../assets/images/home_screen.jpg');
 
 export default function HomeScreen() {
+  const titleOpacity = useRef(new Animated.Value(0)).current;
+  const titleSlide = useRef(new Animated.Value(-20)).current;
+  const photoScale = useRef(new Animated.Value(0.8)).current;
+  const photoOpacity = useRef(new Animated.Value(0)).current;
+  const buttonsOpacity = useRef(new Animated.Value(0)).current;
+  const buttonsSlide = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      // Title fades in
+      Animated.parallel([
+        Animated.timing(titleOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
+        Animated.timing(titleSlide, { toValue: 0, duration: 600, useNativeDriver: true }),
+      ]),
+      // Photo pops in
+      Animated.parallel([
+        Animated.spring(photoScale, { toValue: 1, tension: 60, friction: 8, useNativeDriver: true }),
+        Animated.timing(photoOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+      ]),
+      // Buttons slide up
+      Animated.parallel([
+        Animated.timing(buttonsOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+        Animated.timing(buttonsSlide, { toValue: 0, duration: 400, useNativeDriver: true }),
+      ]),
+    ]).start();
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <View style={styles.container}>
+        <FloatingHearts />
+
         {/* Header */}
-        <View style={styles.header}>
+        <Animated.View style={[styles.header, { opacity: titleOpacity, transform: [{ translateY: titleSlide }] }]}>
           <View style={styles.headerInner}>
             <Text style={styles.title}>Alan & Amber</Text>
-            <Text style={styles.goldDivider}>✦ ✦ ✦</Text>
+            <Text style={styles.goldDivider}>{'\u2766'}</Text>
             <Text style={styles.subtitle}>Wedding Trivia</Text>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Photo */}
-        <View style={styles.photoContainer}>
+        <Animated.View style={[styles.photoContainer, { opacity: photoOpacity, transform: [{ scale: photoScale }] }]}>
+          <View style={styles.pulseWrapper}>
+            <PulseRing size={220} color={colors.gold} delay={0} />
+            <PulseRing size={220} color={colors.goldLight} delay={700} />
+            <PulseRing size={220} color={colors.gold} delay={1400} />
+          </View>
           <View style={styles.photoFrame}>
             <Image source={homeImage} style={styles.photo} resizeMode="cover" />
           </View>
-        </View>
+        </Animated.View>
 
         {/* Buttons */}
-        <View style={styles.buttonContainer}>
+        <Animated.View style={[styles.buttonContainer, { opacity: buttonsOpacity, transform: [{ translateY: buttonsSlide }] }]}>
           <TouchableOpacity style={styles.button} onPress={() => router.push('/name')} activeOpacity={0.85}>
-            <Text style={styles.buttonText}>💍  Test Your Alan & Amber Knowledge</Text>
+            <Text style={styles.buttonText}>{'\uD83D\uDC8D'}  Test Your Alan & Amber Knowledge</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.button, styles.buttonSecondary]} onPress={() => router.push('/scores')} activeOpacity={0.85}>
-            <Text style={[styles.buttonText, styles.buttonTextSecondary]}>🏆  View High Scores</Text>
+            <Text style={[styles.buttonText, styles.buttonTextSecondary]}>{'\uD83C\uDFC6'}  View High Scores</Text>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
 
       </View>
     </SafeAreaView>
@@ -71,7 +108,7 @@ const styles = StyleSheet.create({
   },
   goldDivider: {
     color: colors.gold,
-    fontSize: 20,
+    fontSize: 28,
     marginVertical: 12,
     letterSpacing: 8,
   },
@@ -87,6 +124,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+  },
+  pulseWrapper: {
+    position: 'absolute',
+    width: 220,
+    height: 220,
   },
   photoFrame: {
     width: 200,
@@ -140,13 +182,5 @@ const styles = StyleSheet.create({
   },
   buttonTextSecondary: {
     color: colors.goldLight,
-  },
-  footer: {
-    textAlign: 'center',
-    paddingBottom: 40,
-    fontFamily: 'Lato_400Regular',
-    fontSize: 14,
-    color: colors.textLight,
-    letterSpacing: 2,
   },
 });

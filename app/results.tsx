@@ -1,16 +1,18 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { colors } from '../constants/theme';
 import { saveScore } from '../utils/storage';
+import { playCelebration } from '../utils/sounds';
+import Confetti from '../components/Confetti';
+import FloatingHearts from '../components/FloatingHearts';
 
 function getResultMessage(score: number): string {
 
 let result = "An error has occurred. Please blame one of Alan's brothers.";
 
 switch (score) {
-  // fill in the blank for 0-10, with funny messages that roast the player for low scores and praise them for high scores
   case 0:
     result = "Do you even know who we are?!";
     break;
@@ -30,10 +32,10 @@ switch (score) {
     result = "Not bad. not good either. but not bad.";
     break;
   case 6:
-    result = "You got all of the questions right for only one of us, didn’t you?";
+    result = "You got all of the questions right for only one of us, didn't you?";
     break;
   case 7:
-    result = "Good job! You’ve earned 10 minutes of Murfy love. Use it well.";
+    result = "Good job! You've earned 10 minutes of Murfy love. Use it well.";
     break;
   case 8:
     result = "Have you been spying on us? Very impressive.";
@@ -49,53 +51,126 @@ switch (score) {
   return result;
 }
 
+function useCountUp(target: number, duration = 1500) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (target === 0) { setValue(0); return; }
+    let start = 0;
+    const step = duration / target;
+    const timer = setInterval(() => {
+      start++;
+      setValue(start);
+      if (start >= target) clearInterval(timer);
+    }, step);
+    return () => clearInterval(timer);
+  }, [target, duration]);
+
+  return value;
+}
+
 export default function ResultsScreen() {
   const { name, score: scoreParam } = useLocalSearchParams<{ name: string; score: string }>();
   const score = parseInt(scoreParam ?? '0', 10);
   const savedRef = useRef(false);
+  const displayScore = useCountUp(score, 1200);
+
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+
+  const headerOpacity = useRef(new Animated.Value(0)).current;
+  const nameScale = useRef(new Animated.Value(0.5)).current;
+  const nameOpacity = useRef(new Animated.Value(0)).current;
+  const scoreScale = useRef(new Animated.Value(0.3)).current;
+  const scoreOpacity = useRef(new Animated.Value(0)).current;
+  const messageOpacity = useRef(new Animated.Value(0)).current;
+  const messageSlide = useRef(new Animated.Value(20)).current;
+  const buttonOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (!savedRef.current && name) {
       savedRef.current = true;
       saveScore({ name, score }).catch(console.error);
     }
+
+    Animated.sequence([
+      // Header fades in
+      Animated.timing(headerOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+      // Name pops in
+      Animated.parallel([
+        Animated.spring(nameScale, { toValue: 1, tension: 60, friction: 7, useNativeDriver: true }),
+        Animated.timing(nameOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
+      ]),
+      // Score pops in big
+      Animated.parallel([
+        Animated.spring(scoreScale, { toValue: 1, tension: 50, friction: 6, useNativeDriver: true }),
+        Animated.timing(scoreOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
+      ]),
+    ]).start(() => {
+      // After score animation, trigger confetti for good scores
+      if (score >= 7) {
+        setShowConfetti(true);
+        playCelebration().catch(() => {});
+      }
+      // Show message with slight delay
+      setShowMessage(true);
+      Animated.sequence([
+        Animated.delay(200),
+        Animated.parallel([
+          Animated.timing(messageOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+          Animated.timing(messageSlide, { toValue: 0, duration: 500, useNativeDriver: true }),
+        ]),
+        Animated.timing(buttonOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+      ]).start();
+    });
   }, []);
 
   const message = getResultMessage(score);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <Confetti active={showConfetti} />
+      {score >= 8 && <FloatingHearts />}
+
       {/* Header */}
-      <View style={styles.header}>
+      <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
         <View style={styles.headerInner}>
           <Text style={styles.title}>Alan & Amber</Text>
-          <Text style={styles.goldDivider}>✦ ✦ ✦</Text>
+          <Text style={styles.goldDivider}>{'\u2766'}</Text>
           <Text style={styles.subtitle}>Wedding Trivia</Text>
         </View>
-      </View>
+      </Animated.View>
 
       <View style={styles.content}>
         <View style={styles.scoreContainer}>
           {/* Player name */}
-          <Text style={styles.playerName}>{name}</Text>
-          <Text style={styles.scoredLabel}>scored</Text>
+          <Animated.Text style={[styles.playerName, { opacity: nameOpacity, transform: [{ scale: nameScale }] }]}>
+            {name}
+          </Animated.Text>
+          <Animated.Text style={[styles.scoredLabel, { opacity: nameOpacity }]}>
+            scored
+          </Animated.Text>
 
           {/* Big score */}
-          <View style={styles.scoreDisplay}>
-            <Text style={styles.scoreNumber}>{score}</Text>
+          <Animated.View style={[styles.scoreDisplay, { opacity: scoreOpacity, transform: [{ scale: scoreScale }] }]}>
+            <Text style={styles.scoreNumber}>{displayScore}</Text>
             <Text style={styles.scoreDivider}>/</Text>
             <Text style={styles.scoreTotal}>10</Text>
-          </View>
+          </Animated.View>
 
           {/* Message card */}
-          <View style={styles.messageCard}>
-            <Text style={styles.messageText}>{message}</Text>
-          </View>
+          {showMessage && (
+            <Animated.View style={[styles.messageCard, { opacity: messageOpacity, transform: [{ translateY: messageSlide }] }]}>
+              <Text style={styles.messageText}>{message}</Text>
+            </Animated.View>
+          )}
 
           {/* Back to home */}
-          <TouchableOpacity style={styles.homeButton} onPress={() => router.replace('/')} activeOpacity={0.85}>
-            <Text style={styles.homeButtonText}>Back to Home</Text>
-          </TouchableOpacity>
+          <Animated.View style={{ opacity: buttonOpacity, width: '100%' }}>
+            <TouchableOpacity style={styles.homeButton} onPress={() => router.replace('/')} activeOpacity={0.85}>
+              <Text style={styles.homeButtonText}>Back to Home</Text>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </View>
     </SafeAreaView>
@@ -128,7 +203,7 @@ const styles = StyleSheet.create({
   },
   goldDivider: {
     color: colors.gold,
-    fontSize: 18,
+    fontSize: 24,
     marginVertical: 10,
     letterSpacing: 8,
   },

@@ -30,7 +30,7 @@ export default function ScoresScreen() {
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Alan & Amber</Text>
-          <Text style={styles.goldDivider}>✦ ✦ ✦</Text>
+          <Text style={styles.goldDivider}>{'\u2766'}</Text>
           <Text style={styles.subtitle}>High Scores</Text>
         </View>
       </View>

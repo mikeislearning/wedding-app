@@ -24,7 +24,7 @@ export default function NameScreen() {
         <View style={styles.header}>
           <View style={styles.headerInner}>
             <Text style={styles.headerTitle}>Alan & Amber</Text>
-            <Text style={styles.goldDivider}>✦ ✦ ✦</Text>
+            <Text style={styles.goldDivider}>{'\u2766'}</Text>
           </View>
         </View>
 

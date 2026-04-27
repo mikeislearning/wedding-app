@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { colors } from '../constants/theme';
 import { getRandomQuestions, Question } from '../utils/quiz';
 import { getQuestionImage } from '../utils/questionImages';
-import { playCorrect, playIncorrect } from '../utils/sounds';
+import { playCorrect, playIncorrect, playTap } from '../utils/sounds';
 import Confetti from '../components/Confetti';
 
 function useTypewriter(text: string, speed = 25) {
@@ -70,6 +70,9 @@ export default function QuizScreen() {
   const captionSource = answered && currentQuestion?.caption ? currentQuestion.caption : '';
   const { displayed: typedCaption, done: captionDone } = useTypewriter(captionSource);
   const nextButtonOpacity = useRef(new Animated.Value(0)).current;
+  const cardOpacity = useRef(new Animated.Value(0)).current;
+  const cardSlide = useRef(new Animated.Value(30)).current;
+  const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (answered && captionDone) {
@@ -82,13 +85,34 @@ export default function QuizScreen() {
     }
   }, [answered, captionDone]);
 
+  // Animate question card entrance on each new question
+  useEffect(() => {
+    if (!currentQuestion) return;
+    cardOpacity.setValue(0);
+    cardSlide.setValue(30);
+    Animated.parallel([
+      Animated.timing(cardOpacity, { toValue: 1, duration: 350, useNativeDriver: true }),
+      Animated.timing(cardSlide, { toValue: 0, duration: 350, useNativeDriver: true }),
+    ]).start();
+  }, [currentIndex, questions.length > 0]);
+
+  // Smooth progress bar
+  useEffect(() => {
+    if (questions.length === 0) return;
+    Animated.timing(progressAnim, {
+      toValue: (currentIndex + 1) / questions.length,
+      duration: 400,
+      useNativeDriver: false,
+    }).start();
+  }, [currentIndex, questions.length]);
+
   if (!currentQuestion) return null;
   const isLastQuestion = currentIndex === questions.length - 1;
-  const progress = (currentIndex + 1) / questions.length;
 
   const handleSelect = (option: string) => {
     if (answered) return;
     setSelectedAnswer(option);
+    playTap().catch(() => {});
   };
 
   const handleConfirm = () => {
@@ -173,7 +197,7 @@ export default function QuizScreen() {
 
       {/* Progress Bar */}
       <View style={styles.progressBarContainer}>
-        <View style={[styles.progressBarFill, { width: `${progress * 100}%` as any }]} />
+        <Animated.View style={[styles.progressBarFill, { width: progressAnim.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }]} />
       </View>
 
       <ScrollView
@@ -181,7 +205,7 @@ export default function QuizScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.contentWrapper}>
+        <Animated.View style={[styles.contentWrapper, { opacity: cardOpacity, transform: [{ translateY: cardSlide }] }]}>
           {/* Question Card */}
           <View style={styles.questionCard}>
             <Text style={styles.questionText}>{currentQuestion.question}</Text>
@@ -259,7 +283,7 @@ export default function QuizScreen() {
               </TouchableOpacity>
             </Animated.View>
           )}
-        </View>
+        </Animated.View>
       </ScrollView>
     </SafeAreaView>
   );
