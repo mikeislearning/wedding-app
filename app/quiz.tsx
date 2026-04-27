@@ -8,7 +8,9 @@ import { getQuestionImage } from '../utils/questionImages';
 import { playCorrect, playIncorrect, playTap } from '../utils/sounds';
 import Confetti from '../components/Confetti';
 
-function useTypewriter(text: string, speed = 6) {
+const REVEAL_DURATION_MS = 3000;
+
+function useTypewriter(text: string) {
   const [displayed, setDisplayed] = useState('');
   const [done, setDone] = useState(false);
 
@@ -16,17 +18,19 @@ function useTypewriter(text: string, speed = 6) {
     setDisplayed('');
     setDone(!text);
     if (!text) return;
-    let i = 0;
+    const startTime = Date.now();
     const timer = setInterval(() => {
-      i++;
-      setDisplayed(text.slice(0, i));
-      if (i >= text.length) {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / REVEAL_DURATION_MS, 1);
+      const chars = Math.ceil(progress * text.length);
+      setDisplayed(text.slice(0, chars));
+      if (progress >= 1) {
         clearInterval(timer);
         setDone(true);
       }
-    }, speed);
+    }, 16);
     return () => clearInterval(timer);
-  }, [text, speed]);
+  }, [text]);
 
   return { displayed, done };
 }
@@ -61,8 +65,10 @@ export default function QuizScreen() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const startTime = useRef(Date.now());
 
   useEffect(() => {
+    startTime.current = Date.now();
     setQuestions(getRandomQuestions(10));
   }, []);
 
@@ -130,9 +136,10 @@ export default function QuizScreen() {
 
   const handleNext = () => {
     if (isLastQuestion) {
+      const elapsed = Math.round((Date.now() - startTime.current) / 1000);
       router.replace({
         pathname: '/results',
-        params: { name, score: score.toString() },
+        params: { name, score: score.toString(), time: elapsed.toString() },
       });
     } else {
       nextButtonOpacity.setValue(0);

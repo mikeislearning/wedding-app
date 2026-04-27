@@ -78,8 +78,9 @@ function useCountUp(target: number, duration = 1500) {
 }
 
 export default function ResultsScreen() {
-  const { name, score: scoreParam } = useLocalSearchParams<{ name: string; score: string }>();
+  const { name, score: scoreParam, time: timeParam } = useLocalSearchParams<{ name: string; score: string; time: string }>();
   const score = parseInt(scoreParam ?? '0', 10);
+  const timeSeconds = parseInt(timeParam ?? '0', 10);
   const savedRef = useRef(false);
   const displayScore = useCountUp(score, 1200);
 
@@ -98,7 +99,7 @@ export default function ResultsScreen() {
   useEffect(() => {
     if (!savedRef.current && name) {
       savedRef.current = true;
-      saveScore({ name, score }).catch(console.error);
+      saveScore({ name, score, timeSeconds }).catch(console.error);
     }
 
     Animated.sequence([

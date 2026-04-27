@@ -7,6 +7,13 @@ import { getScores, ScoreEntry } from '../utils/storage';
 
 const MEDALS = ['\uD83E\uDD47', '\uD83E\uDD48', '\uD83E\uDD49'];
 
+function formatTime(seconds?: number): string {
+  if (seconds == null) return '--:--';
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
 export default function ScoresScreen() {
   const [scores, setScores] = useState<ScoreEntry[]>([]);
   const [loaded, setLoaded] = useState(false);
@@ -14,7 +21,10 @@ export default function ScoresScreen() {
   useEffect(() => {
     getScores()
       .then(data => {
-        const sorted = [...data].sort((a, b) => b.score - a.score);
+        const sorted = [...data].sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          return (a.timeSeconds ?? Infinity) - (b.timeSeconds ?? Infinity);
+        });
         setScores(sorted);
         setLoaded(true);
       })
@@ -54,6 +64,7 @@ export default function ScoresScreen() {
                   )}
                 </View>
                 <Text style={styles.playerName} numberOfLines={1}>{entry.name}</Text>
+                <Text style={styles.timeText}>{formatTime(entry.timeSeconds)}</Text>
                 <View style={styles.scoreBadge}>
                   <Text style={styles.playerScore}>{entry.score}/10</Text>
                 </View>
@@ -143,6 +154,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato_400Regular',
     fontSize: 17,
     color: colors.text,
+  },
+  timeText: {
+    fontFamily: 'Lato_400Regular',
+    fontSize: 14,
+    color: colors.textLight,
+    marginLeft: 8,
+    minWidth: 40,
+    textAlign: 'right',
   },
   scoreBadge: {
     backgroundColor: colors.maroon,

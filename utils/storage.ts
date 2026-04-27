@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export interface ScoreEntry {
   name: string;
   score: number;
+  timeSeconds: number;
 }
 
 const SCORES_KEY = 'wedding_trivia_scores';
