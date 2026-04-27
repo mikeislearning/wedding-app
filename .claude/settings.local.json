@@ -11,7 +11,25 @@
       "Bash(pdftoppm -jpeg -r 150 /Users/michaelmacpherson/Documents/codings/wedding-app/Wedding_Trivia_2.pdf /tmp/wedding_pdf_pages/page)",
       "Read(//tmp/**)",
       "Bash(npx tsc:*)",
-      "Bash(ls /Users/michaelmacpherson/Documents/codings/wedding-app/assets/image*)"
+      "Bash(ls /Users/michaelmacpherson/Documents/codings/wedding-app/assets/image*)",
+      "Bash(pnpm info *)",
+      "Bash(python3 -c \"import sys,json; vs=json.load\\(sys.stdin\\); [print\\(v\\) for v in vs if v.startswith\\('15.'\\)]\")",
+      "Bash(npx expo *)",
+      "Bash(python3 -c \"import sys,json; print\\(json.load\\(sys.stdin\\)['version']\\)\")",
+      "Bash(pod install *)",
+      "Bash(python3 *)",
+      "Bash(pip3 install *)",
+      "Bash(npm view *)",
+      "Bash(tar -tzf expo-dom-webview-55.0.5.tgz)",
+      "Read(//private/tmp/domwebview-check/**)",
+      "Bash(tar -xzf expo-dom-webview-55.0.5.tgz)",
+      "Bash(pnpm why *)",
+      "Bash(pnpm remove *)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.swmansion.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(gh api *)",
+      "Bash(grep -E \"\\(example|apps\\).*\\\\.\\(ts|tsx\\)$\")"
     ]
   }
 }

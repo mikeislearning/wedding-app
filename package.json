@@ -7,27 +7,35 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "ios:device": "expo run:ios --device",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "deploy": "eas build --platform ios --profile production",
+    "deploy-auto": "eas build --platform ios --profile production --auto-submit --non-interactive"
   },
   "dependencies": {
     "@expo-google-fonts/lato": "^0.4.1",
     "@expo-google-fonts/playfair-display": "^0.4.2",
     "@react-native-async-storage/async-storage": "^2.2.0",
-    "expo": "~55.0.5",
-    "expo-font": "^55.0.4",
-    "expo-router": "^55.0.4",
-    "expo-splash-screen": "^55.0.10",
-    "expo-status-bar": "~55.0.4",
-    "react": "19.2.4",
-    "react-dom": "^19.2.4",
-    "react-native": "0.83.2",
-    "react-native-safe-area-context": "^5.7.0",
-    "react-native-screens": "^4.24.0",
+    "expo": "~55.0.17",
+    "expo-font": "^55.0.6",
+    "expo-router": "^55.0.13",
+    "expo-splash-screen": "^55.0.19",
+    "expo-status-bar": "~55.0.5",
+    "react": "19.2.0",
+    "react-dom": "^19.2.0",
+    "react-native": "0.83.6",
+    "react-native-audio-api": "^0.12.1",
+    "react-native-safe-area-context": "^5.6.2",
+    "react-native-screens": "^4.23.0",
     "react-native-web": "^0.21.2"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
     "typescript": "~5.9.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@expo/dom-webview": "55.0.5"
+    }
   },
   "private": true,
   "packageManager": "pnpm@10.32.0+sha512.9b2634bb3fed5601c33633f2d92593f506270a3963b8c51d2b2d6a828da615ce4e9deebef9614ccebbc13ac8d3c0f9c9ccceb583c69c8578436fa477dbb20d70"

@@ -36,7 +36,6 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.footer}>Alan & Amber • 2026</Text>
       </View>
     </SafeAreaView>
   );

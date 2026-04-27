@@ -5,6 +5,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { colors } from '../constants/theme';
 import { getRandomQuestions, Question } from '../utils/quiz';
 import { getQuestionImage } from '../utils/questionImages';
+import { playCorrect, playIncorrect } from '../utils/sounds';
+import Confetti from '../components/Confetti';
 
 function useTypewriter(text: string, speed = 25) {
   const [displayed, setDisplayed] = useState('');
@@ -58,6 +60,7 @@ export default function QuizScreen() {
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     setQuestions(getRandomQuestions(10));
@@ -91,8 +94,13 @@ export default function QuizScreen() {
   const handleConfirm = () => {
     if (!selectedAnswer || answered) return;
     setAnswered(true);
-    if (selectedAnswer === currentQuestion.correctAnswer) {
+    const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
+    if (isCorrect) {
       setScore(prev => prev + 1);
+      setShowConfetti(true);
+      playCorrect().catch(() => {});
+    } else {
+      playIncorrect().catch(() => {});
     }
   };
 
@@ -104,6 +112,7 @@ export default function QuizScreen() {
       });
     } else {
       nextButtonOpacity.setValue(0);
+      setShowConfetti(false);
       setCurrentIndex(prev => prev + 1);
       setSelectedAnswer(null);
       setAnswered(false);
@@ -150,6 +159,7 @@ export default function QuizScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <Confetti active={showConfetti} />
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerInner}>

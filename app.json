@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "wedding-app",
+    "name": "A & A Trivia",
     "slug": "wedding-app",
     "scheme": "wedding-trivia",
     "version": "1.0.0",
@@ -39,6 +39,11 @@
         "projectId": "b36f5ea7-3ec3-4114-b612-1158ebb7f310"
       }
     },
-    "owner": "mikeislearning"
+    "owner": "mikeislearning",
+    "plugins": [
+      "expo-font",
+      "expo-router",
+      "react-native-audio-api"
+    ]
   }
 }
