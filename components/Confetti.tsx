@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Dimensions } from 'react-native';
-import { colors } from '../constants/theme';
 
-const CONFETTI_COUNT = 40;
-const COLORS = [colors.gold, colors.goldLight, colors.maroon, colors.white, '#F8B4D9', '#A8D8EA', '#FFD93D'];
+const CONFETTI_COUNT = 80;
+const COLORS = ['#FFD93D', '#F8B4D9', '#A8D8EA', '#FF6B6B', '#C3AED6', '#7AACCE', '#FFFFFF', '#F5E6A3', '#90E0AB'];
+const SHAPES = ['rect', 'rect', 'rect', 'circle', 'circle'];
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
 
 interface Piece {
@@ -14,6 +14,7 @@ interface Piece {
   color: string;
   size: number;
   startX: number;
+  shape: string;
 }
 
 export default function Confetti({ active }: { active: boolean }) {
@@ -24,8 +25,9 @@ export default function Confetti({ active }: { active: boolean }) {
       rotate: new Animated.Value(0),
       opacity: new Animated.Value(0),
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      size: 6 + Math.random() * 8,
+      size: 6 + Math.random() * 10,
       startX: Math.random() * SCREEN_W,
+      shape: SHAPES[Math.floor(Math.random() * SHAPES.length)],
     }))
   ).current;
 
@@ -39,15 +41,15 @@ export default function Confetti({ active }: { active: boolean }) {
       p.opacity.setValue(1);
       p.startX = Math.random() * SCREEN_W;
 
-      const drift = (Math.random() - 0.5) * 200;
-      const duration = 1800 + Math.random() * 1200;
-      const delay = Math.random() * 400;
+      const drift = (Math.random() - 0.5) * 300;
+      const duration = 2200 + Math.random() * 2000;
+      const delay = Math.random() * 800;
 
       return Animated.sequence([
         Animated.delay(delay),
         Animated.parallel([
           Animated.timing(p.y, {
-            toValue: SCREEN_H + 50,
+            toValue: SCREEN_H + 80,
             duration,
             useNativeDriver: true,
           }),
@@ -57,15 +59,15 @@ export default function Confetti({ active }: { active: boolean }) {
             useNativeDriver: true,
           }),
           Animated.timing(p.rotate, {
-            toValue: 3 + Math.random() * 5,
+            toValue: 4 + Math.random() * 8,
             duration,
             useNativeDriver: true,
           }),
           Animated.sequence([
-            Animated.delay(duration * 0.6),
+            Animated.delay(duration * 0.65),
             Animated.timing(p.opacity, {
               toValue: 0,
-              duration: duration * 0.4,
+              duration: duration * 0.35,
               useNativeDriver: true,
             }),
           ]),
@@ -93,7 +95,8 @@ export default function Confetti({ active }: { active: boolean }) {
               styles.piece,
               {
                 width: p.size,
-                height: p.size * 0.6,
+                height: p.shape === 'circle' ? p.size : p.size * 0.55,
+                borderRadius: p.shape === 'circle' ? p.size / 2 : 2,
                 backgroundColor: p.color,
                 left: p.startX,
                 top: -20,
@@ -115,7 +118,6 @@ export default function Confetti({ active }: { active: boolean }) {
 const styles = StyleSheet.create({
   piece: {
     position: 'absolute',
-    borderRadius: 2,
     zIndex: 1000,
   },
 });

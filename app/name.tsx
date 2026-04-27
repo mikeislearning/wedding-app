@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { colors } from '../constants/theme';
+import FloatingHearts from '../components/FloatingHearts';
 
 export default function NameScreen() {
   const [name, setName] = useState('');
@@ -16,23 +17,17 @@ export default function NameScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <FloatingHearts />
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerInner}>
-            <Text style={styles.headerTitle}>Alan & Amber</Text>
-            <Text style={styles.goldDivider}>{'\u2766'}</Text>
-          </View>
-        </View>
-
         {/* Content */}
         <View style={styles.content}>
           <View style={styles.card}>
+            <Text style={styles.cardEmoji}>{'\u270F\uFE0F'}</Text>
             <Text style={styles.cardTitle}>What's your name?</Text>
-            <Text style={styles.cardSubtext}>We'll save your score to the leaderboard</Text>
+            <Text style={styles.cardSubtext}>So we know who to congratulate (or roast)</Text>
 
             <TextInput
               style={[styles.input, focused && styles.inputFocused, Platform.OS === 'web' && ({ outlineStyle: 'none' } as any)]}
@@ -55,12 +50,12 @@ export default function NameScreen() {
               activeOpacity={0.85}
             >
               <Text style={[styles.submitButtonText, !name.trim() && styles.submitButtonTextDisabled]}>
-                Start Quiz
+                Let's Go! {'\uD83C\uDF38'}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()} activeOpacity={0.7}>
-              <Text style={styles.backButtonText}>← Back</Text>
+              <Text style={styles.backButtonText}>{'\u2190'} Back</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -72,36 +67,10 @@ export default function NameScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.maroon,
+    backgroundColor: colors.cream,
   },
   keyboardView: {
     flex: 1,
-    backgroundColor: colors.cream,
-  },
-  header: {
-    backgroundColor: colors.maroon,
-    paddingTop: 32,
-    paddingBottom: 32,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  headerInner: {
-    width: '100%',
-    maxWidth: 700,
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 36,
-    color: colors.white,
-    textAlign: 'center',
-    letterSpacing: 2,
-  },
-  goldDivider: {
-    color: colors.gold,
-    fontSize: 18,
-    marginTop: 10,
-    letterSpacing: 8,
   },
   content: {
     flex: 1,
@@ -112,44 +81,48 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: colors.white,
-    borderRadius: 20,
+    borderRadius: 24,
     padding: 36,
     width: '100%',
-    maxWidth: 580,
-    shadowColor: colors.maroonDark,
+    maxWidth: 480,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
     elevation: 8,
     alignItems: 'center',
   },
+  cardEmoji: {
+    fontSize: 40,
+    marginBottom: 12,
+  },
   cardTitle: {
     fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 32,
+    fontSize: 28,
     color: colors.text,
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   cardSubtext: {
     fontFamily: 'Lato_400Regular',
-    fontSize: 16,
+    fontSize: 15,
     color: colors.textLight,
     textAlign: 'center',
-    marginBottom: 32,
+    marginBottom: 28,
     lineHeight: 22,
   },
   input: {
     width: '100%',
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: colors.creamDark,
-    borderRadius: 10,
+    borderRadius: 14,
     paddingVertical: 16,
     paddingHorizontal: 20,
     fontFamily: 'Lato_400Regular',
     fontSize: 18,
     color: colors.text,
     backgroundColor: colors.cream,
-    marginBottom: 24,
+    marginBottom: 20,
   },
   inputFocused: {
     borderColor: colors.maroon,
@@ -157,31 +130,28 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     backgroundColor: colors.maroon,
-    borderRadius: 12,
+    borderRadius: 50,
     paddingVertical: 18,
     paddingHorizontal: 32,
     width: '100%',
     alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: colors.gold,
-    shadowColor: colors.maroonDark,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 4,
     marginBottom: 16,
   },
   submitButtonDisabled: {
     backgroundColor: colors.creamDark,
-    borderColor: colors.textLight,
     shadowOpacity: 0,
     elevation: 0,
   },
   submitButtonText: {
     fontFamily: 'Lato_700Bold',
-    fontSize: 20,
+    fontSize: 18,
     color: colors.white,
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   submitButtonTextDisabled: {
     color: colors.textLight,
@@ -194,6 +164,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato_400Regular',
     fontSize: 16,
     color: colors.textLight,
-    letterSpacing: 0.5,
   },
 });

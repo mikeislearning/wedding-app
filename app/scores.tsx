@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { colors } from '../constants/theme';
 import { getScores, ScoreEntry } from '../utils/storage';
 
-const MEDALS = ['🥇', '🥈', '🥉'];
+const MEDALS = ['\uD83E\uDD47', '\uD83E\uDD48', '\uD83E\uDD49'];
 
 export default function ScoresScreen() {
   const [scores, setScores] = useState<ScoreEntry[]>([]);
@@ -25,14 +25,10 @@ export default function ScoresScreen() {
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerInner}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()} activeOpacity={0.7}>
-            <Text style={styles.backButtonText}>← Back</Text>
-          </TouchableOpacity>
-          <Text style={styles.title}>Alan & Amber</Text>
-          <Text style={styles.goldDivider}>{'\u2766'}</Text>
-          <Text style={styles.subtitle}>High Scores</Text>
-        </View>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()} activeOpacity={0.7}>
+          <Text style={styles.backButtonText}>{'\u2190'} Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.title}>{'\uD83C\uDFC6'} Leaderboard</Text>
       </View>
 
       <ScrollView
@@ -43,12 +39,13 @@ export default function ScoresScreen() {
         <View style={styles.listWrapper}>
           {loaded && scores.length === 0 ? (
             <View style={styles.emptyContainer}>
+              <Text style={styles.emptyEmoji}>{'\uD83C\uDF38'}</Text>
               <Text style={styles.emptyText}>No scores yet!</Text>
               <Text style={styles.emptySubtext}>Be the first to play.</Text>
             </View>
           ) : (
             scores.map((entry, index) => (
-              <View key={index} style={[styles.row, index % 2 === 0 ? styles.rowEven : styles.rowOdd]}>
+              <View key={index} style={[styles.row, index === 0 && styles.rowFirst]}>
                 <View style={styles.rankContainer}>
                   {index < 3 ? (
                     <Text style={styles.medal}>{MEDALS[index]}</Text>
@@ -57,7 +54,9 @@ export default function ScoresScreen() {
                   )}
                 </View>
                 <Text style={styles.playerName} numberOfLines={1}>{entry.name}</Text>
-                <Text style={styles.playerScore}>{entry.score} / 10</Text>
+                <View style={styles.scoreBadge}>
+                  <Text style={styles.playerScore}>{entry.score}/10</Text>
+                </View>
               </View>
             ))
           )}
@@ -70,133 +69,113 @@ export default function ScoresScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.maroon,
+    backgroundColor: colors.cream,
   },
   header: {
-    backgroundColor: colors.maroon,
-    paddingTop: 20,
-    paddingBottom: 32,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  headerInner: {
-    width: '100%',
-    maxWidth: 700,
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingHorizontal: 24,
     alignItems: 'center',
   },
   backButton: {
     alignSelf: 'flex-start',
     paddingVertical: 8,
-    paddingHorizontal: 4,
-    marginBottom: 12,
+    marginBottom: 8,
   },
   backButtonText: {
     fontFamily: 'Lato_400Regular',
     fontSize: 16,
-    color: colors.goldLight,
-    letterSpacing: 0.5,
+    color: colors.textLight,
   },
   title: {
     fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 40,
-    color: colors.white,
+    fontSize: 32,
+    color: colors.text,
     textAlign: 'center',
-    letterSpacing: 2,
-  },
-  goldDivider: {
-    color: colors.gold,
-    fontSize: 18,
-    marginVertical: 10,
-    letterSpacing: 8,
-  },
-  subtitle: {
-    fontFamily: 'PlayfairDisplay_400Regular',
-    fontSize: 22,
-    color: colors.goldLight,
-    letterSpacing: 5,
-    textTransform: 'uppercase',
   },
   scrollView: {
     flex: 1,
-    backgroundColor: colors.cream,
   },
   scrollContent: {
     flexGrow: 1,
     alignItems: 'center',
-    paddingVertical: 24,
+    paddingVertical: 16,
     paddingHorizontal: 20,
   },
   listWrapper: {
     width: '100%',
-    maxWidth: 700,
+    maxWidth: 600,
     backgroundColor: colors.white,
-    borderRadius: 16,
+    borderRadius: 20,
     overflow: 'hidden',
-    shadowColor: colors.maroonDark,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
     elevation: 4,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 18,
-    paddingHorizontal: 24,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: colors.goldLight,
+    borderBottomColor: colors.creamDark,
   },
-  rowEven: {
-    backgroundColor: colors.cream,
-  },
-  rowOdd: {
+  rowFirst: {
     backgroundColor: colors.creamDark,
   },
   rankContainer: {
     width: 44,
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: 12,
   },
   medal: {
     fontSize: 24,
   },
   rankNumber: {
     fontFamily: 'Lato_700Bold',
-    fontSize: 18,
-    color: colors.gold,
-    letterSpacing: 0.5,
+    fontSize: 16,
+    color: colors.textLight,
   },
   playerName: {
     flex: 1,
-    fontFamily: 'PlayfairDisplay_400Regular',
-    fontSize: 18,
+    fontFamily: 'Lato_400Regular',
+    fontSize: 17,
     color: colors.text,
-    letterSpacing: 0.3,
+  },
+  scoreBadge: {
+    backgroundColor: colors.maroon,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    marginLeft: 12,
   },
   playerScore: {
     fontFamily: 'Lato_700Bold',
-    fontSize: 18,
-    color: colors.maroon,
-    letterSpacing: 0.5,
-    marginLeft: 12,
+    fontSize: 14,
+    color: colors.white,
   },
   emptyContainer: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 80,
+    paddingVertical: 60,
     paddingHorizontal: 40,
+  },
+  emptyEmoji: {
+    fontSize: 48,
+    marginBottom: 16,
   },
   emptyText: {
     fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 28,
+    fontSize: 24,
     color: colors.text,
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   emptySubtext: {
     fontFamily: 'Lato_400Regular',
-    fontSize: 18,
+    fontSize: 16,
     color: colors.textLight,
     textAlign: 'center',
   },

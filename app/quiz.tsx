@@ -8,7 +8,7 @@ import { getQuestionImage } from '../utils/questionImages';
 import { playCorrect, playIncorrect, playTap } from '../utils/sounds';
 import Confetti from '../components/Confetti';
 
-function useTypewriter(text: string, speed = 25) {
+function useTypewriter(text: string, speed = 6) {
   const [displayed, setDisplayed] = useState('');
   const [done, setDone] = useState(false);
 
@@ -292,14 +292,16 @@ export default function QuizScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.maroon,
+    backgroundColor: colors.cream,
   },
   header: {
-    backgroundColor: colors.maroon,
-    paddingTop: 20,
-    paddingBottom: 20,
+    backgroundColor: colors.cream,
+    paddingTop: 16,
+    paddingBottom: 12,
     paddingHorizontal: 20,
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.creamDark,
   },
   headerInner: {
     width: '100%',
@@ -311,31 +313,38 @@ const styles = StyleSheet.create({
   categoryBadge: {
     fontFamily: 'Lato_700Bold',
     fontSize: 13,
-    color: colors.gold,
+    color: colors.maroon,
     letterSpacing: 1,
     textTransform: 'uppercase',
+    backgroundColor: colors.creamDark,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   questionCounter: {
     fontFamily: 'Lato_700Bold',
     fontSize: 16,
-    color: colors.white,
+    color: colors.text,
     letterSpacing: 0.5,
   },
   playerName: {
     fontFamily: 'Lato_400Regular',
     fontSize: 14,
-    color: colors.goldLight,
+    color: colors.textLight,
     maxWidth: 100,
     textAlign: 'right',
   },
   progressBarContainer: {
-    height: 6,
-    backgroundColor: colors.maroonDark,
+    height: 8,
+    backgroundColor: colors.creamDark,
     width: '100%',
+    borderRadius: 4,
   },
   progressBarFill: {
-    height: 6,
+    height: 8,
     backgroundColor: colors.gold,
+    borderRadius: 4,
   },
   scrollView: {
     flex: 1,
@@ -375,16 +384,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   option: {
-    backgroundColor: colors.creamDark,
-    borderRadius: 12,
+    backgroundColor: colors.white,
+    borderRadius: 16,
     paddingVertical: 18,
     paddingHorizontal: 20,
-    borderWidth: 1.5,
-    borderColor: colors.maroonLight,
-    shadowColor: colors.maroonDark,
+    borderWidth: 2,
+    borderColor: colors.creamDark,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
     elevation: 2,
   },
   optionSelected: {
@@ -431,21 +440,21 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     backgroundColor: colors.gold,
-    borderRadius: 12,
+    borderRadius: 50,
     paddingVertical: 18,
     paddingHorizontal: 32,
     alignItems: 'center',
     marginBottom: 20,
-    shadowColor: colors.maroonDark,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.12,
     shadowRadius: 6,
     elevation: 4,
   },
   confirmButtonText: {
     fontFamily: 'Lato_700Bold',
     fontSize: 18,
-    color: colors.maroon,
+    color: colors.text,
     letterSpacing: 0.5,
   },
   feedbackContainer: {
@@ -503,15 +512,13 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     backgroundColor: colors.maroon,
-    borderRadius: 12,
+    borderRadius: 50,
     paddingVertical: 20,
     paddingHorizontal: 32,
     alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: colors.gold,
-    shadowColor: colors.maroonDark,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 5,
     marginBottom: 20,

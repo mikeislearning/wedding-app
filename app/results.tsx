@@ -17,7 +17,7 @@ switch (score) {
     result = "Do you even know who we are?!";
     break;
   case 1:
-    result = "Did Murfy answer these questions with his paws?";
+    result = "Either Murfy tried to answer these questions with his paws, or you’re at the wrong wedding!";
     break;
   case 2:
     result = "You need to pay more attention when we speak";
@@ -29,7 +29,7 @@ switch (score) {
     result = "Well, at least you tried.";
     break;
   case 5:
-    result = "Not bad. not good either. but not bad.";
+    result = "Not bad. not good either. But not bad.";
     break;
   case 6:
     result = "You got all of the questions right for only one of us, didn't you?";
@@ -44,11 +44,19 @@ switch (score) {
     result = "Near perfection! you must tell us your secret, since you clearly know all of ours.";
     break;
   case 10:
-    result = "Are you in this relationship? amazing!";
+    result = "Are you in this relationship? Amazing!";
     break;
   }
 
   return result;
+}
+
+function getResultEmoji(score: number): string {
+  if (score <= 2) return '\uD83D\uDE48';
+  if (score <= 4) return '\uD83E\uDD37';
+  if (score <= 6) return '\uD83D\uDE0F';
+  if (score <= 8) return '\uD83C\uDF89';
+  return '\uD83E\uDD29';
 }
 
 function useCountUp(target: number, duration = 1500) {
@@ -94,25 +102,21 @@ export default function ResultsScreen() {
     }
 
     Animated.sequence([
-      // Header fades in
       Animated.timing(headerOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
-      // Name pops in
       Animated.parallel([
         Animated.spring(nameScale, { toValue: 1, tension: 60, friction: 7, useNativeDriver: true }),
         Animated.timing(nameOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
       ]),
-      // Score pops in big
       Animated.parallel([
         Animated.spring(scoreScale, { toValue: 1, tension: 50, friction: 6, useNativeDriver: true }),
         Animated.timing(scoreOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
       ]),
     ]).start(() => {
-      // After score animation, trigger confetti for good scores
+      // Always show confetti — it's a celebration!
+      setShowConfetti(true);
       if (score >= 7) {
-        setShowConfetti(true);
         playCelebration().catch(() => {});
       }
-      // Show message with slight delay
       setShowMessage(true);
       Animated.sequence([
         Animated.delay(200),
@@ -126,29 +130,23 @@ export default function ResultsScreen() {
   }, []);
 
   const message = getResultMessage(score);
+  const emoji = getResultEmoji(score);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <Confetti active={showConfetti} />
-      {score >= 8 && <FloatingHearts />}
-
-      {/* Header */}
-      <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-        <View style={styles.headerInner}>
-          <Text style={styles.title}>Alan & Amber</Text>
-          <Text style={styles.goldDivider}>{'\u2766'}</Text>
-          <Text style={styles.subtitle}>Wedding Trivia</Text>
-        </View>
-      </Animated.View>
+      <FloatingHearts />
 
       <View style={styles.content}>
         <View style={styles.scoreContainer}>
+          {/* Emoji */}
+          <Animated.Text style={[styles.bigEmoji, { opacity: headerOpacity }]}>
+            {emoji}
+          </Animated.Text>
+
           {/* Player name */}
           <Animated.Text style={[styles.playerName, { opacity: nameOpacity, transform: [{ scale: nameScale }] }]}>
             {name}
-          </Animated.Text>
-          <Animated.Text style={[styles.scoredLabel, { opacity: nameOpacity }]}>
-            scored
           </Animated.Text>
 
           {/* Big score */}
@@ -165,10 +163,14 @@ export default function ResultsScreen() {
             </Animated.View>
           )}
 
-          {/* Back to home */}
-          <Animated.View style={{ opacity: buttonOpacity, width: '100%' }}>
+          {/* Buttons */}
+          <Animated.View style={[styles.buttonRow, { opacity: buttonOpacity }]}>
+            <TouchableOpacity style={styles.playAgainButton} onPress={() => router.replace('/name')} activeOpacity={0.85}>
+              <Text style={styles.playAgainText}>{'\uD83C\uDF38'} Play Again</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.homeButton} onPress={() => router.replace('/')} activeOpacity={0.85}>
-              <Text style={styles.homeButtonText}>Back to Home</Text>
+              <Text style={styles.homeButtonText}>Home</Text>
             </TouchableOpacity>
           </Animated.View>
         </View>
@@ -180,134 +182,109 @@ export default function ResultsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.maroon,
-  },
-  header: {
-    backgroundColor: colors.maroon,
-    paddingTop: 40,
-    paddingBottom: 40,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  headerInner: {
-    width: '100%',
-    maxWidth: 700,
-    alignItems: 'center',
-  },
-  title: {
-    fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 44,
-    color: colors.white,
-    textAlign: 'center',
-    letterSpacing: 2,
-  },
-  goldDivider: {
-    color: colors.gold,
-    fontSize: 24,
-    marginVertical: 10,
-    letterSpacing: 8,
-  },
-  subtitle: {
-    fontFamily: 'PlayfairDisplay_400Regular',
-    fontSize: 20,
-    color: colors.goldLight,
-    letterSpacing: 5,
-    textTransform: 'uppercase',
+    backgroundColor: colors.cream,
   },
   content: {
     flex: 1,
-    backgroundColor: colors.cream,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 40,
+    paddingVertical: 20,
   },
   scoreContainer: {
     width: '100%',
-    maxWidth: 600,
+    maxWidth: 500,
     alignItems: 'center',
+  },
+  bigEmoji: {
+    fontSize: 56,
+    marginBottom: 8,
   },
   playerName: {
     fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 36,
-    color: colors.gold,
+    fontSize: 34,
+    color: colors.maroon,
     textAlign: 'center',
     letterSpacing: 1,
-    marginBottom: 4,
-  },
-  scoredLabel: {
-    fontFamily: 'Lato_400Regular',
-    fontSize: 18,
-    color: colors.textLight,
-    letterSpacing: 2,
-    textTransform: 'uppercase',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   scoreDisplay: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginBottom: 32,
+    marginBottom: 28,
   },
   scoreNumber: {
     fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 96,
+    fontSize: 88,
     color: colors.maroon,
-    lineHeight: 100,
+    lineHeight: 92,
   },
   scoreDivider: {
     fontFamily: 'Lato_400Regular',
-    fontSize: 48,
+    fontSize: 44,
     color: colors.textLight,
-    marginHorizontal: 8,
-    lineHeight: 80,
+    marginHorizontal: 6,
+    lineHeight: 72,
   },
   scoreTotal: {
     fontFamily: 'PlayfairDisplay_400Regular',
-    fontSize: 64,
+    fontSize: 56,
     color: colors.text,
-    lineHeight: 80,
+    lineHeight: 72,
   },
   messageCard: {
     backgroundColor: colors.white,
-    borderRadius: 16,
-    padding: 28,
+    borderRadius: 20,
+    padding: 24,
     width: '100%',
     alignItems: 'center',
-    borderLeftWidth: 4,
-    borderLeftColor: colors.gold,
-    shadowColor: colors.maroonDark,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 4,
-    marginBottom: 36,
+    marginBottom: 28,
   },
   messageText: {
     fontFamily: 'PlayfairDisplay_400Regular',
-    fontSize: 24,
+    fontSize: 22,
     color: colors.text,
     textAlign: 'center',
-    lineHeight: 34,
+    lineHeight: 32,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+  playAgainButton: {
+    flex: 1,
+    backgroundColor: colors.maroon,
+    borderRadius: 50,
+    paddingVertical: 18,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  playAgainText: {
+    fontFamily: 'Lato_700Bold',
+    fontSize: 17,
+    color: colors.white,
   },
   homeButton: {
-    backgroundColor: colors.maroon,
-    borderRadius: 12,
-    paddingVertical: 20,
-    paddingHorizontal: 48,
+    flex: 1,
+    borderRadius: 50,
+    paddingVertical: 18,
     alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: colors.gold,
-    shadowColor: colors.maroonDark,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 5,
-    width: '100%',
+    borderWidth: 2,
+    borderColor: colors.maroon,
   },
   homeButtonText: {
     fontFamily: 'Lato_700Bold',
-    fontSize: 20,
-    color: colors.white,
-    letterSpacing: 0.5,
+    fontSize: 17,
+    color: colors.maroon,
   },
 });

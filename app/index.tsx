@@ -1,25 +1,27 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, Animated } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { colors } from '../constants/theme';
 import FloatingHearts from '../components/FloatingHearts';
+import Confetti from '../components/Confetti';
 
 const homeImage = require('../assets/images/home_screen.jpg');
 
 export default function HomeScreen() {
   const titleOpacity = useRef(new Animated.Value(0)).current;
-  const titleSlide = useRef(new Animated.Value(-20)).current;
+  const titleScale = useRef(new Animated.Value(0.85)).current;
   const photoScale = useRef(new Animated.Value(0.9)).current;
   const photoOpacity = useRef(new Animated.Value(0)).current;
   const buttonsOpacity = useRef(new Animated.Value(0)).current;
   const buttonsSlide = useRef(new Animated.Value(30)).current;
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     Animated.sequence([
       Animated.parallel([
+        Animated.spring(titleScale, { toValue: 1, tension: 50, friction: 7, useNativeDriver: true }),
         Animated.timing(titleOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
-        Animated.timing(titleSlide, { toValue: 0, duration: 600, useNativeDriver: true }),
       ]),
       Animated.parallel([
         Animated.spring(photoScale, { toValue: 1, tension: 50, friction: 8, useNativeDriver: true }),
@@ -29,20 +31,22 @@ export default function HomeScreen() {
         Animated.timing(buttonsOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
         Animated.timing(buttonsSlide, { toValue: 0, duration: 400, useNativeDriver: true }),
       ]),
-    ]).start();
+    ]).start(() => {
+      setShowConfetti(true);
+    });
   }, []);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <View style={styles.container}>
         <FloatingHearts />
+        <Confetti active={showConfetti} />
 
-        {/* Header */}
-        <Animated.View style={[styles.header, { opacity: titleOpacity, transform: [{ translateY: titleSlide }] }]}>
-          <View style={styles.headerInner}>
-            <Text style={styles.title}>Alan & Amber</Text>
-            <Text style={styles.goldDivider}>{'\u2766'}</Text>
-          </View>
+        {/* Title */}
+        <Animated.View style={[styles.titleArea, { opacity: titleOpacity, transform: [{ scale: titleScale }] }]}>
+          <Text style={styles.emoji}>{'\uD83D\uDC90'}</Text>
+          <Text style={styles.title}>Alan & Amber</Text>
+          <Text style={styles.dividerRow}>{'\u2022'} {'\u2764\uFE0F'} {'\u2022'}</Text>
         </Animated.View>
 
         {/* Photo */}
@@ -55,11 +59,11 @@ export default function HomeScreen() {
         {/* Buttons */}
         <Animated.View style={[styles.buttonContainer, { opacity: buttonsOpacity, transform: [{ translateY: buttonsSlide }] }]}>
           <TouchableOpacity style={styles.button} onPress={() => router.push('/name')} activeOpacity={0.85}>
-            <Text style={styles.buttonText}>{'\uD83C\uDF38'}  Test Your Knowledge</Text>
+            <Text style={styles.buttonText}>{'\uD83C\uDF38'}  How well do you know us?</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button, styles.buttonSecondary]} onPress={() => router.push('/scores')} activeOpacity={0.85}>
-            <Text style={[styles.buttonText, styles.buttonTextSecondary]}>{'\uD83C\uDFC6'}  View High Scores</Text>
+          <TouchableOpacity style={styles.buttonOutline} onPress={() => router.push('/scores')} activeOpacity={0.85}>
+            <Text style={styles.buttonOutlineText}>{'\uD83C\uDFC6'}  High Scores</Text>
           </TouchableOpacity>
         </Animated.View>
 
@@ -71,56 +75,54 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.maroon,
+    backgroundColor: colors.cream,
   },
   container: {
     flex: 1,
     backgroundColor: colors.cream,
   },
-  header: {
-    backgroundColor: colors.maroon,
-    paddingTop: 36,
-    paddingBottom: 28,
-    paddingHorizontal: 20,
+  titleArea: {
     alignItems: 'center',
+    paddingTop: 24,
+    paddingBottom: 8,
   },
-  headerInner: {
-    width: '100%',
-    maxWidth: 700,
-    alignItems: 'center',
+  emoji: {
+    fontSize: 40,
+    marginBottom: 4,
   },
   title: {
     fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 48,
-    color: colors.white,
+    fontSize: 42,
+    color: colors.maroon,
     textAlign: 'center',
-    letterSpacing: 2,
+    letterSpacing: 1,
   },
-  goldDivider: {
+  dividerRow: {
+    fontSize: 16,
     color: colors.gold,
-    fontSize: 24,
-    marginTop: 8,
+    marginTop: 6,
+    letterSpacing: 6,
   },
   photoContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingVertical: 12,
   },
   photoFrame: {
     width: '85%',
     maxWidth: 400,
     flex: 1,
     maxHeight: 300,
-    borderRadius: 20,
+    borderRadius: 24,
     borderWidth: 4,
     borderColor: colors.gold,
     overflow: 'hidden',
-    shadowColor: colors.maroonDark,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
     elevation: 10,
   },
   photo: {
@@ -128,37 +130,47 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   buttonContainer: {
-    paddingHorizontal: 40,
+    paddingHorizontal: 36,
     paddingBottom: 28,
-    gap: 16,
+    gap: 12,
     alignItems: 'center',
   },
   button: {
     backgroundColor: colors.maroon,
-    borderRadius: 14,
-    paddingVertical: 20,
-    paddingHorizontal: 28,
+    borderRadius: 50,
+    paddingVertical: 18,
+    paddingHorizontal: 32,
     alignItems: 'center',
-    borderWidth: 0,
     shadowColor: colors.maroonDark,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 6,
     width: '100%',
-    maxWidth: 600,
-  },
-  buttonSecondary: {
-    backgroundColor: colors.maroonLight,
+    maxWidth: 500,
   },
   buttonText: {
     fontFamily: 'Lato_700Bold',
     fontSize: 18,
     color: colors.white,
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
     textAlign: 'center',
   },
-  buttonTextSecondary: {
-    color: colors.white,
+  buttonOutline: {
+    borderRadius: 50,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: colors.maroon,
+    width: '100%',
+    maxWidth: 500,
+  },
+  buttonOutlineText: {
+    fontFamily: 'Lato_700Bold',
+    fontSize: 16,
+    color: colors.maroon,
+    letterSpacing: 0.3,
+    textAlign: 'center',
   },
 });
