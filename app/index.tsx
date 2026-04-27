@@ -4,31 +4,27 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRef, useEffect } from 'react';
 import { colors } from '../constants/theme';
 import FloatingHearts from '../components/FloatingHearts';
-import PulseRing from '../components/PulseRing';
 
 const homeImage = require('../assets/images/home_screen.jpg');
 
 export default function HomeScreen() {
   const titleOpacity = useRef(new Animated.Value(0)).current;
   const titleSlide = useRef(new Animated.Value(-20)).current;
-  const photoScale = useRef(new Animated.Value(0.8)).current;
+  const photoScale = useRef(new Animated.Value(0.9)).current;
   const photoOpacity = useRef(new Animated.Value(0)).current;
   const buttonsOpacity = useRef(new Animated.Value(0)).current;
   const buttonsSlide = useRef(new Animated.Value(30)).current;
 
   useEffect(() => {
     Animated.sequence([
-      // Title fades in
       Animated.parallel([
         Animated.timing(titleOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
         Animated.timing(titleSlide, { toValue: 0, duration: 600, useNativeDriver: true }),
       ]),
-      // Photo pops in
       Animated.parallel([
-        Animated.spring(photoScale, { toValue: 1, tension: 60, friction: 8, useNativeDriver: true }),
-        Animated.timing(photoOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+        Animated.spring(photoScale, { toValue: 1, tension: 50, friction: 8, useNativeDriver: true }),
+        Animated.timing(photoOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
       ]),
-      // Buttons slide up
       Animated.parallel([
         Animated.timing(buttonsOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
         Animated.timing(buttonsSlide, { toValue: 0, duration: 400, useNativeDriver: true }),
@@ -46,17 +42,11 @@ export default function HomeScreen() {
           <View style={styles.headerInner}>
             <Text style={styles.title}>Alan & Amber</Text>
             <Text style={styles.goldDivider}>{'\u2766'}</Text>
-            <Text style={styles.subtitle}>Wedding Trivia</Text>
           </View>
         </Animated.View>
 
         {/* Photo */}
         <Animated.View style={[styles.photoContainer, { opacity: photoOpacity, transform: [{ scale: photoScale }] }]}>
-          <View style={styles.pulseWrapper}>
-            <PulseRing size={220} color={colors.gold} delay={0} />
-            <PulseRing size={220} color={colors.goldLight} delay={700} />
-            <PulseRing size={220} color={colors.gold} delay={1400} />
-          </View>
           <View style={styles.photoFrame}>
             <Image source={homeImage} style={styles.photo} resizeMode="cover" />
           </View>
@@ -65,7 +55,7 @@ export default function HomeScreen() {
         {/* Buttons */}
         <Animated.View style={[styles.buttonContainer, { opacity: buttonsOpacity, transform: [{ translateY: buttonsSlide }] }]}>
           <TouchableOpacity style={styles.button} onPress={() => router.push('/name')} activeOpacity={0.85}>
-            <Text style={styles.buttonText}>{'\uD83D\uDC8D'}  Test Your Alan & Amber Knowledge</Text>
+            <Text style={styles.buttonText}>{'\uD83C\uDF38'}  Test Your Knowledge</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.button, styles.buttonSecondary]} onPress={() => router.push('/scores')} activeOpacity={0.85}>
@@ -89,8 +79,8 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: colors.maroon,
-    paddingTop: 60,
-    paddingBottom: 60,
+    paddingTop: 36,
+    paddingBottom: 28,
     paddingHorizontal: 20,
     alignItems: 'center',
   },
@@ -101,69 +91,58 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 52,
+    fontSize: 48,
     color: colors.white,
     textAlign: 'center',
     letterSpacing: 2,
   },
   goldDivider: {
     color: colors.gold,
-    fontSize: 28,
-    marginVertical: 12,
-    letterSpacing: 8,
-  },
-  subtitle: {
-    fontFamily: 'PlayfairDisplay_400Regular',
     fontSize: 24,
-    color: colors.goldLight,
-    letterSpacing: 6,
-    textTransform: 'uppercase',
+    marginTop: 8,
   },
   photoContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-  pulseWrapper: {
-    position: 'absolute',
-    width: 220,
-    height: 220,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
   photoFrame: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    borderWidth: 3,
+    width: '85%',
+    maxWidth: 400,
+    flex: 1,
+    maxHeight: 300,
+    borderRadius: 20,
+    borderWidth: 4,
     borderColor: colors.gold,
     overflow: 'hidden',
     shadowColor: colors.maroonDark,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 10,
   },
   photo: {
     width: '100%',
     height: '100%',
   },
   buttonContainer: {
-    paddingHorizontal: 60,
-    paddingBottom: 24,
-    gap: 24,
+    paddingHorizontal: 40,
+    paddingBottom: 28,
+    gap: 16,
     alignItems: 'center',
   },
   button: {
     backgroundColor: colors.maroon,
-    borderRadius: 12,
-    paddingVertical: 24,
-    paddingHorizontal: 32,
+    borderRadius: 14,
+    paddingVertical: 20,
+    paddingHorizontal: 28,
     alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: colors.gold,
+    borderWidth: 0,
     shadowColor: colors.maroonDark,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 6,
     width: '100%',
@@ -171,16 +150,15 @@ const styles = StyleSheet.create({
   },
   buttonSecondary: {
     backgroundColor: colors.maroonLight,
-    borderColor: colors.gold,
   },
   buttonText: {
     fontFamily: 'Lato_700Bold',
-    fontSize: 20,
+    fontSize: 18,
     color: colors.white,
     letterSpacing: 0.5,
     textAlign: 'center',
   },
   buttonTextSecondary: {
-    color: colors.goldLight,
+    color: colors.white,
   },
 });

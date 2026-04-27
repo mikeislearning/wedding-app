@@ -3,7 +3,7 @@ import { Animated, StyleSheet, Dimensions } from 'react-native';
 import { colors } from '../constants/theme';
 
 const CONFETTI_COUNT = 40;
-const COLORS = [colors.gold, colors.goldLight, colors.maroon, colors.white, '#E8A0BF', '#FF6B6B'];
+const COLORS = [colors.gold, colors.goldLight, colors.maroon, colors.white, '#F8B4D9', '#A8D8EA', '#FFD93D'];
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
 
 interface Piece {

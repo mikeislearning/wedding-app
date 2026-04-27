@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 20,
     borderWidth: 1.5,
-    borderColor: colors.maroon,
+    borderColor: colors.maroonLight,
     shadowColor: colors.maroonDark,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,

@@ -4,9 +4,9 @@ import { colors } from '../constants/theme';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const ELEMENT_COUNT = 12;
-const SYMBOLS = ['♥', '♥', '♥', '✦', '✦', '♥'];
-const COLORS = [colors.gold, colors.goldLight, colors.cream];
+const ELEMENT_COUNT = 14;
+const SYMBOLS = ['\uD83C\uDF38', '\uD83C\uDF3C', '\uD83C\uDF3A', '\u2728', '\uD83C\uDF3B', '\u2764', '\uD83E\uDEB7'];
+const COLORS = [colors.gold, colors.goldLight, colors.maroonLight, '#F8B4D9', '#A8D8EA'];
 
 interface FloatingElement {
   symbol: string;
