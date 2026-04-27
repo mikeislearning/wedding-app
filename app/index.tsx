@@ -1,7 +1,9 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../constants/theme';
+
+const homeImage = require('../assets/images/home_screen.jpg');
 
 export default function HomeScreen() {
   return (
@@ -13,6 +15,13 @@ export default function HomeScreen() {
             <Text style={styles.title}>Alan & Amber</Text>
             <Text style={styles.goldDivider}>✦ ✦ ✦</Text>
             <Text style={styles.subtitle}>Wedding Trivia</Text>
+          </View>
+        </View>
+
+        {/* Photo */}
+        <View style={styles.photoContainer}>
+          <View style={styles.photoFrame}>
+            <Image source={homeImage} style={styles.photo} resizeMode="cover" />
           </View>
         </View>
 
@@ -74,10 +83,32 @@ const styles = StyleSheet.create({
     letterSpacing: 6,
     textTransform: 'uppercase',
   },
-  buttonContainer: {
+  photoContainer: {
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  photoFrame: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    borderWidth: 3,
+    borderColor: colors.gold,
+    overflow: 'hidden',
+    shadowColor: colors.maroonDark,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  photo: {
+    width: '100%',
+    height: '100%',
+  },
+  buttonContainer: {
     paddingHorizontal: 60,
+    paddingBottom: 24,
     gap: 24,
     alignItems: 'center',
   },

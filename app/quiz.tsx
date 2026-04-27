@@ -1,10 +1,54 @@
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Animated } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { colors } from '../constants/theme';
 import { getRandomQuestions, Question } from '../utils/quiz';
 import { getQuestionImage } from '../utils/questionImages';
+
+function useTypewriter(text: string, speed = 25) {
+  const [displayed, setDisplayed] = useState('');
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    setDisplayed('');
+    setDone(!text);
+    if (!text) return;
+    let i = 0;
+    const timer = setInterval(() => {
+      i++;
+      setDisplayed(text.slice(0, i));
+      if (i >= text.length) {
+        clearInterval(timer);
+        setDone(true);
+      }
+    }, speed);
+    return () => clearInterval(timer);
+  }, [text, speed]);
+
+  return { displayed, done };
+}
+
+function FadeInImage({ source, style }: { source: any; style: any }) {
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  const onLoad = useCallback(() => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, [opacity]);
+
+  return (
+    <Animated.Image
+      source={source}
+      style={[style, { opacity }]}
+      resizeMode="contain"
+      onLoad={onLoad}
+    />
+  );
+}
 
 export default function QuizScreen() {
   const { name } = useLocalSearchParams<{ name: string }>();
@@ -19,9 +63,23 @@ export default function QuizScreen() {
     setQuestions(getRandomQuestions(10));
   }, []);
 
-  if (questions.length === 0) return null;
+  const currentQuestion = questions.length > 0 ? questions[currentIndex] : null;
+  const captionSource = answered && currentQuestion?.caption ? currentQuestion.caption : '';
+  const { displayed: typedCaption, done: captionDone } = useTypewriter(captionSource);
+  const nextButtonOpacity = useRef(new Animated.Value(0)).current;
 
-  const currentQuestion = questions[currentIndex];
+  useEffect(() => {
+    if (answered && captionDone) {
+      nextButtonOpacity.setValue(0);
+      Animated.timing(nextButtonOpacity, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [answered, captionDone]);
+
+  if (!currentQuestion) return null;
   const isLastQuestion = currentIndex === questions.length - 1;
   const progress = (currentIndex + 1) / questions.length;
 
@@ -45,6 +103,7 @@ export default function QuizScreen() {
         params: { name, score: score.toString() },
       });
     } else {
+      nextButtonOpacity.setValue(0);
       setCurrentIndex(prev => prev + 1);
       setSelectedAnswer(null);
       setAnswered(false);
@@ -140,7 +199,7 @@ export default function QuizScreen() {
             </TouchableOpacity>
           )}
 
-          {/* Feedback */}
+          {/* Feedback
           {answered && (
             <View style={[
               styles.feedbackContainer,
@@ -158,12 +217,12 @@ export default function QuizScreen() {
                 </Text>
               )}
             </View>
-          )}
+          )} */}
 
           {/* Caption */}
           {answered && currentQuestion.caption && (
             <View style={styles.captionContainer}>
-              <Text style={styles.captionText}>{currentQuestion.caption}</Text>
+              <Text style={styles.captionText}>{typedCaption}</Text>
             </View>
           )}
 
@@ -172,22 +231,23 @@ export default function QuizScreen() {
             const source = getQuestionImage(img);
             if (!source) return null;
             return (
-              <Image
+              <FadeInImage
                 key={i}
                 source={source}
                 style={styles.revealImage}
-                resizeMode="contain"
               />
             );
           })}
 
           {/* Next Button */}
-          {answered && (
-            <TouchableOpacity style={styles.nextButton} onPress={handleNext} activeOpacity={0.85}>
-              <Text style={styles.nextButtonText}>
-                {isLastQuestion ? 'See Results \u{1F389}' : 'Next Question \u2192'}
-              </Text>
-            </TouchableOpacity>
+          {answered && captionDone && (
+            <Animated.View style={{ opacity: nextButtonOpacity }}>
+              <TouchableOpacity style={styles.nextButton} onPress={handleNext} activeOpacity={0.85}>
+                <Text style={styles.nextButtonText}>
+                  {isLastQuestion ? 'See Results \u{1F389}' : 'Next Question \u2192'}
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
           )}
         </View>
       </ScrollView>

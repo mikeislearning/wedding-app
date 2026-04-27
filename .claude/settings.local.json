@@ -10,7 +10,8 @@
       "Bash(mkdir -p /tmp/wedding_pdf_pages)",
       "Bash(pdftoppm -jpeg -r 150 /Users/michaelmacpherson/Documents/codings/wedding-app/Wedding_Trivia_2.pdf /tmp/wedding_pdf_pages/page)",
       "Read(//tmp/**)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(ls /Users/michaelmacpherson/Documents/codings/wedding-app/assets/image*)"
     ]
   }
 }

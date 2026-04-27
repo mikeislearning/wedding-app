@@ -6,10 +6,47 @@ import { colors } from '../constants/theme';
 import { saveScore } from '../utils/storage';
 
 function getResultMessage(score: number): string {
-  if (score <= 2) return "wtf who are you 😳";
-  if (score <= 5) return "do you even know us 🤷";
-  if (score <= 8) return "ok you're not kicked out 😅";
-  return "wtf, are you in this relationship? 👀";
+
+let result = "An error has occurred. Please blame one of Alan's brothers.";
+
+switch (score) {
+  // fill in the blank for 0-10, with funny messages that roast the player for low scores and praise them for high scores
+  case 0:
+    result = "Do you even know who we are?!";
+    break;
+  case 1:
+    result = "Did Murfy answer these questions with his paws?";
+    break;
+  case 2:
+    result = "You need to pay more attention when we speak";
+    break;
+  case 3:
+    result = "Embarrassing. Offensive. Borderline criminal.";
+    break;
+  case 4:
+    result = "Well, at least you tried.";
+    break;
+  case 5:
+    result = "Not bad. not good either. but not bad.";
+    break;
+  case 6:
+    result = "You got all of the questions right for only one of us, didn’t you?";
+    break;
+  case 7:
+    result = "Good job! You’ve earned 10 minutes of Murfy love. Use it well.";
+    break;
+  case 8:
+    result = "Have you been spying on us? Very impressive.";
+    break;
+  case 9:
+    result = "Near perfection! you must tell us your secret, since you clearly know all of ours.";
+    break;
+  case 10:
+    result = "Are you in this relationship? amazing!";
+    break;
+  }
+
+  return result;
 }
 
 export default function ResultsScreen() {
