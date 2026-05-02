@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { colors } from '../constants/theme';
 import { getRandomQuestions, Question } from '../utils/quiz';
 import { getQuestionImage } from '../utils/questionImages';
-import { playCorrect, playIncorrect, playTap } from '../utils/sounds';
+import { playCorrect, playIncorrect, playTap, stopAll } from '../utils/sounds';
 import Confetti from '../components/Confetti';
 
 const REVEAL_DURATION_MS = 3000;
@@ -135,6 +135,7 @@ export default function QuizScreen() {
   };
 
   const handleNext = () => {
+    stopAll();
     if (isLastQuestion) {
       const elapsed = Math.round((Date.now() - startTime.current) / 1000);
       router.replace({

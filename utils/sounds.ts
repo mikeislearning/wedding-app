@@ -1,4 +1,4 @@
-import { AudioContext, AudioBuffer } from 'react-native-audio-api';
+import { AudioContext, AudioBuffer, AudioBufferSourceNode } from 'react-native-audio-api';
 
 const correctAsset = require('../assets/sounds/correct.wav');
 const incorrectAsset = require('../assets/sounds/incorrect.wav');
@@ -12,6 +12,8 @@ let incorrectBuffer: AudioBuffer | null = null;
 let tapBuffer: AudioBuffer | null = null;
 let celebrationBuffer: AudioBuffer | null = null;
 let brideBuffer: AudioBuffer | null = null;
+
+const activeSources: Set<AudioBufferSourceNode> = new Set();
 
 let loadPromise: Promise<void> | null = null;
 
@@ -36,12 +38,29 @@ function ensureLoaded(): Promise<void> {
   return loadPromise;
 }
 
+export function stopAll() {
+  activeSources.forEach((source) => {
+    try {
+      source.stop();
+    } catch {}
+  });
+  activeSources.clear();
+}
+
 function playBuffer(buffer: AudioBuffer | null) {
   if (!ctx || !buffer) return;
-  const source = ctx.createBufferSource();
-  source.buffer = buffer;
-  source.connect(ctx.destination);
-  source.start();
+  try {
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    activeSources.add(source);
+    source.start();
+    // Auto-cleanup when done
+    const duration = buffer.duration;
+    setTimeout(() => {
+      activeSources.delete(source);
+    }, (duration + 0.5) * 1000);
+  } catch {}
 }
 
 export async function playCorrect() {
