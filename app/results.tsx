@@ -166,10 +166,6 @@ export default function ResultsScreen() {
 
           {/* Buttons */}
           <Animated.View style={[styles.buttonRow, { opacity: buttonOpacity }]}>
-            <TouchableOpacity style={styles.playAgainButton} onPress={() => router.replace('/name')} activeOpacity={0.85}>
-              <Text style={styles.playAgainText}>{'\uD83C\uDF38'} Play Again</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity style={styles.homeButton} onPress={() => router.replace('/')} activeOpacity={0.85}>
               <Text style={styles.homeButtonText}>Home</Text>
             </TouchableOpacity>

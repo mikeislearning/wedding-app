@@ -69,7 +69,7 @@ export default function QuizScreen() {
 
   useEffect(() => {
     startTime.current = Date.now();
-    setQuestions(getRandomQuestions(10));
+    setQuestions(getRandomQuestions());
   }, []);
 
   const currentQuestion = questions.length > 0 ? questions[currentIndex] : null;

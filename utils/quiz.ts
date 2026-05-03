@@ -19,10 +19,12 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export function getRandomQuestions(count = 10): Question[] {
-  const shuffled = shuffle(questionsData.questions as Question[]);
-  const selected = shuffled.slice(0, count);
-  // shuffle options for each question
+export function getRandomQuestions(): Question[] {
+  const all = questionsData.questions as Question[];
+  const alan = shuffle(all.filter(q => q.category === 'alan')).slice(0, 3);
+  const amber = shuffle(all.filter(q => q.category === 'amber')).slice(0, 3);
+  const couples = shuffle(all.filter(q => q.category === 'couples')).slice(0, 4);
+  const selected = shuffle([...alan, ...amber, ...couples]);
   return selected.map(q => ({
     ...q,
     options: shuffle(q.options),

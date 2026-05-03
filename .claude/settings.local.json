@@ -29,7 +29,8 @@
       "WebFetch(domain:docs.swmansion.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(gh api *)",
-      "Bash(grep -E \"\\(example|apps\\).*\\\\.\\(ts|tsx\\)$\")"
+      "Bash(grep -E \"\\(example|apps\\).*\\\\.\\(ts|tsx\\)$\")",
+      "Bash(afplay *)"
     ]
   }
 }
