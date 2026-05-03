@@ -262,11 +262,27 @@ export default function QuizScreen() {
           )} */}
 
           {/* Caption */}
-          {answered && currentQuestion.caption && (
-            <View style={styles.captionContainer}>
-              <Text style={styles.captionText}>{typedCaption}</Text>
-            </View>
-          )}
+          {answered && currentQuestion.caption && (() => {
+            const fullLines = currentQuestion.caption!.split('\n');
+            const lineColors = fullLines.map((line) => {
+              const lower = line.toLowerCase().trimEnd();
+              if (lower.endsWith('- alan')) return '#2D8B5E';
+              if (lower.endsWith('- amber') || lower.endsWith('-amber')) return '#7B5EA7';
+              return colors.textLight;
+            });
+            const displayedLines = typedCaption.split('\n');
+            return (
+              <View style={styles.captionContainer}>
+                <Text style={styles.captionText}>
+                  {displayedLines.map((line, i, arr) => (
+                    <Text key={i} style={{ color: lineColors[i] ?? colors.textLight }}>
+                      {line}{i < arr.length - 1 ? '\n' : ''}
+                    </Text>
+                  ))}
+                </Text>
+              </View>
+            );
+          })()}
 
           {/* Images */}
           {answered && currentQuestion.images && currentQuestion.images.map((img, i) => {
