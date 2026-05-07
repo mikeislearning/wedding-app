@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { colors } from '../constants/theme';
+import { clearSession } from '../utils/storage';
 import FloatingHearts from '../components/FloatingHearts';
 
 export default function NameScreen() {
@@ -11,6 +12,7 @@ export default function NameScreen() {
 
   const handleSubmit = () => {
     if (name.trim()) {
+      clearSession().catch(() => {});
       router.push({ pathname: '/quiz', params: { name: name.trim() } });
     }
   };

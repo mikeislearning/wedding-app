@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useRef, useState } from 'react';
 import { colors } from '../constants/theme';
-import { saveScore } from '../utils/storage';
+import { saveScore, clearSession } from '../utils/storage';
 import { playCelebration } from '../utils/sounds';
 import Confetti from '../components/Confetti';
 import FloatingHearts from '../components/FloatingHearts';
@@ -100,6 +100,7 @@ export default function ResultsScreen() {
     if (!savedRef.current && name) {
       savedRef.current = true;
       saveScore({ name, score, timeSeconds }).catch(console.error);
+      clearSession().catch(() => {});
     }
 
     Animated.sequence([

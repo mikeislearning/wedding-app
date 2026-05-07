@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, Animated } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { colors } from '../constants/theme';
+import { getSession, QuizSession } from '../utils/storage';
 import FloatingHearts from '../components/FloatingHearts';
 import Confetti from '../components/Confetti';
 
@@ -16,6 +17,22 @@ export default function HomeScreen() {
   const buttonsOpacity = useRef(new Animated.Value(0)).current;
   const buttonsSlide = useRef(new Animated.Value(30)).current;
   const [showConfetti, setShowConfetti] = useState(false);
+  const [resumable, setResumable] = useState<QuizSession | null>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      let cancelled = false;
+      getSession().then((s) => {
+        if (!cancelled) setResumable(s);
+      });
+      return () => { cancelled = true; };
+    }, [])
+  );
+
+  const handleResume = () => {
+    if (!resumable) return;
+    router.push({ pathname: '/quiz', params: { name: resumable.name, resume: '1' } });
+  };
 
   useEffect(() => {
     Animated.sequence([
@@ -58,6 +75,17 @@ export default function HomeScreen() {
 
         {/* Buttons */}
         <Animated.View style={[styles.buttonContainer, { opacity: buttonsOpacity, transform: [{ translateY: buttonsSlide }] }]}>
+          {resumable && (
+            <TouchableOpacity style={styles.resumeButton} onPress={handleResume} activeOpacity={0.85}>
+              <Text style={styles.resumeButtonTitle}>
+                {'\uD83D\uDD01'}  Resume quiz for {resumable.name}
+              </Text>
+              <Text style={styles.resumeButtonSubtitle}>
+                Question {resumable.currentIndex + 1} of {resumable.questions.length}
+              </Text>
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity style={styles.button} onPress={() => router.push('/name')} activeOpacity={0.85}>
             <Text style={styles.buttonText}>{'\uD83C\uDF38'}  How well do you know us?</Text>
           </TouchableOpacity>
@@ -172,5 +200,34 @@ const styles = StyleSheet.create({
     color: colors.maroon,
     letterSpacing: 0.3,
     textAlign: 'center',
+  },
+  resumeButton: {
+    backgroundColor: colors.gold,
+    borderRadius: 50,
+    paddingVertical: 14,
+    paddingHorizontal: 28,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 500,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  resumeButtonTitle: {
+    fontFamily: 'Lato_700Bold',
+    fontSize: 17,
+    color: colors.text,
+    letterSpacing: 0.3,
+    textAlign: 'center',
+  },
+  resumeButtonSubtitle: {
+    fontFamily: 'Lato_400Regular',
+    fontSize: 13,
+    color: colors.text,
+    marginTop: 2,
+    textAlign: 'center',
+    opacity: 0.8,
   },
 });

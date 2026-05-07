@@ -6,6 +6,7 @@ import { colors } from '../constants/theme';
 import { getRandomQuestions, Question } from '../utils/quiz';
 import { getQuestionImage } from '../utils/questionImages';
 import { playCorrect, playIncorrect, playTap, stopAll } from '../utils/sounds';
+import { getSession, saveSession } from '../utils/storage';
 import Confetti from '../components/Confetti';
 
 const REVEAL_DURATION_MS = 3000;
@@ -57,7 +58,7 @@ function FadeInImage({ source, style }: { source: any; style: any }) {
 }
 
 export default function QuizScreen() {
-  const { name } = useLocalSearchParams<{ name: string }>();
+  const { name, resume } = useLocalSearchParams<{ name: string; resume?: string }>();
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -65,12 +66,50 @@ export default function QuizScreen() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const startTime = useRef(Date.now());
+  const runStartRef = useRef(Date.now());
+  const accumulatedMsRef = useRef(0);
+  const createdAtRef = useRef(Date.now());
+  const hydratedRef = useRef(false);
 
   useEffect(() => {
-    startTime.current = Date.now();
-    setQuestions(getRandomQuestions());
+    (async () => {
+      if (resume === '1') {
+        const s = await getSession();
+        if (s) {
+          setQuestions(s.questions);
+          setCurrentIndex(s.currentIndex);
+          setScore(s.score);
+          setSelectedAnswer(s.selectedAnswer);
+          setAnswered(s.answered);
+          accumulatedMsRef.current = s.accumulatedMs;
+          createdAtRef.current = s.createdAt;
+          runStartRef.current = Date.now();
+          hydratedRef.current = true;
+          return;
+        }
+      }
+      accumulatedMsRef.current = 0;
+      createdAtRef.current = Date.now();
+      runStartRef.current = Date.now();
+      hydratedRef.current = true;
+      setQuestions(getRandomQuestions());
+    })();
   }, []);
+
+  // Persist session on every meaningful state change
+  useEffect(() => {
+    if (!hydratedRef.current || questions.length === 0 || !name) return;
+    saveSession({
+      name,
+      questions,
+      currentIndex,
+      score,
+      selectedAnswer,
+      answered,
+      accumulatedMs: accumulatedMsRef.current,
+      createdAt: createdAtRef.current,
+    }).catch(() => {});
+  }, [name, questions, currentIndex, score, selectedAnswer, answered]);
 
   const currentQuestion = questions.length > 0 ? questions[currentIndex] : null;
   const captionSource = answered && currentQuestion?.caption ? currentQuestion.caption : '';
@@ -136,8 +175,11 @@ export default function QuizScreen() {
 
   const handleNext = () => {
     stopAll();
+    const now = Date.now();
+    accumulatedMsRef.current += now - runStartRef.current;
+    runStartRef.current = now;
     if (isLastQuestion) {
-      const elapsed = Math.round((Date.now() - startTime.current) / 1000);
+      const elapsed = Math.round(accumulatedMsRef.current / 1000);
       router.replace({
         pathname: '/results',
         params: { name, score: score.toString(), time: elapsed.toString() },

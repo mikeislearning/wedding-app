@@ -30,7 +30,8 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(gh api *)",
       "Bash(grep -E \"\\(example|apps\\).*\\\\.\\(ts|tsx\\)$\")",
-      "Bash(afplay *)"
+      "Bash(afplay *)",
+      "Bash(pnpm exec *)"
     ]
   }
 }
