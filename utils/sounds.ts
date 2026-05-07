@@ -78,11 +78,11 @@ function playBuffer(buffer: AudioBuffer | null) {
 
 export async function playCorrect() {
   await ensureLoaded();
-  // if (Math.random() < 0.25) {
+  if (Math.random() < 0.25) {
     playBuffer(brideBuffer);
-  // } else {
-  //   playBuffer(correctBuffer);
-  // }
+  } else {
+    playBuffer(correctBuffer);
+  }
 }
 
 export async function playIncorrect() {
