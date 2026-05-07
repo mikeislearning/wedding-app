@@ -2,18 +2,21 @@ import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-aud
 
 setAudioModeAsync({ playsInSilentMode: true }).catch(() => {});
 
-const correctPlayer = createAudioPlayer(require('../assets/sounds/correct.wav'));
+const correctPlayers: AudioPlayer[] = [
+  createAudioPlayer(require('../assets/sounds/correct-1.wav')),
+  createAudioPlayer(require('../assets/sounds/correct-2.wav')),
+  createAudioPlayer(require('../assets/sounds/correct-3.wav')),
+  createAudioPlayer(require('../assets/sounds/correct-4.wav')),
+];
 const incorrectPlayer = createAudioPlayer(require('../assets/sounds/incorrect.wav'));
 const tapPlayer = createAudioPlayer(require('../assets/sounds/tap.wav'));
 const celebrationPlayer = createAudioPlayer(require('../assets/sounds/celebration.wav'));
-const bridePlayer = createAudioPlayer(require('../assets/sounds/bride.wav'));
 
 const allPlayers: AudioPlayer[] = [
-  correctPlayer,
+  ...correctPlayers,
   incorrectPlayer,
   tapPlayer,
   celebrationPlayer,
-  bridePlayer,
 ];
 
 // Pause first to bring the player to a clean state before re-seeking and
@@ -44,11 +47,8 @@ export function stopAll() {
 
 export function playCorrect() {
   stopAll();
-  if (Math.random() < 0.25) {
-    play(bridePlayer);
-  } else {
-    play(correctPlayer);
-  }
+  const player = correctPlayers[Math.floor(Math.random() * correctPlayers.length)];
+  play(player);
 }
 
 export function playIncorrect() {
