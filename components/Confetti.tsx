@@ -30,9 +30,17 @@ export default function Confetti({ active }: { active: boolean }) {
       shape: SHAPES[Math.floor(Math.random() * SHAPES.length)],
     }))
   ).current;
+  const runningAnim = useRef<Animated.CompositeAnimation | null>(null);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active) {
+      // Halt any in-flight animation when the parent toggles confetti off
+      // (e.g. when the user taps Next). Without this, the underlying
+      // Animated.Values keep ticking even after the views unmount.
+      runningAnim.current?.stop();
+      runningAnim.current = null;
+      return;
+    }
 
     const animations = pieces.map((p) => {
       p.x.setValue(0);
@@ -75,7 +83,16 @@ export default function Confetti({ active }: { active: boolean }) {
       ]);
     });
 
-    Animated.parallel(animations).start();
+    const composite = Animated.parallel(animations);
+    runningAnim.current = composite;
+    composite.start(() => {
+      if (runningAnim.current === composite) runningAnim.current = null;
+    });
+
+    return () => {
+      runningAnim.current?.stop();
+      runningAnim.current = null;
+    };
   }, [active]);
 
   if (!active) return null;

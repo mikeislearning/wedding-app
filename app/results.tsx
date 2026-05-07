@@ -117,7 +117,7 @@ export default function ResultsScreen() {
       // Always show confetti — it's a celebration!
       setShowConfetti(true);
       if (score >= 7) {
-        playCelebration().catch(() => {});
+        playCelebration();
       }
       setShowMessage(true);
       Animated.sequence([
