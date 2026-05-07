@@ -1,4 +1,4 @@
-import { AudioContext, AudioBuffer, AudioBufferSourceNode } from 'react-native-audio-api';
+import { AudioContext, AudioBuffer, AudioBufferSourceNode, GainNode } from 'react-native-audio-api';
 
 const correctAsset = require('../assets/sounds/correct.wav');
 const incorrectAsset = require('../assets/sounds/incorrect.wav');
@@ -13,7 +13,10 @@ let tapBuffer: AudioBuffer | null = null;
 let celebrationBuffer: AudioBuffer | null = null;
 let brideBuffer: AudioBuffer | null = null;
 
-const activeSources: Set<AudioBufferSourceNode> = new Set();
+type ActiveVoice = { source: AudioBufferSourceNode; gain: GainNode };
+const activeSources: Set<ActiveVoice> = new Set();
+
+const FADE_SECONDS = 0.08;
 
 let loadPromise: Promise<void> | null = null;
 
@@ -39,9 +42,17 @@ function ensureLoaded(): Promise<void> {
 }
 
 export function stopAll() {
-  activeSources.forEach((source) => {
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  activeSources.forEach(({ source, gain }) => {
     try {
-      source.stop();
+      // Anchor current gain value, then ramp to 0 so the native source
+      // is silent before we stop it (abrupt stops mid-playback crash).
+      gain.gain.setValueAtTime(gain.gain.value, now);
+      gain.gain.linearRampToValueAtTime(0, now + FADE_SECONDS);
+    } catch {}
+    try {
+      source.stop(now + FADE_SECONDS + 0.01);
     } catch {}
   });
   activeSources.clear();
@@ -51,25 +62,27 @@ function playBuffer(buffer: AudioBuffer | null) {
   if (!ctx || !buffer) return;
   try {
     const source = ctx.createBufferSource();
+    const gain = ctx.createGain();
     source.buffer = buffer;
-    source.connect(ctx.destination);
-    activeSources.add(source);
+    source.connect(gain);
+    gain.connect(ctx.destination);
+    const voice: ActiveVoice = { source, gain };
+    activeSources.add(voice);
     source.start();
-    // Auto-cleanup when done
     const duration = buffer.duration;
     setTimeout(() => {
-      activeSources.delete(source);
+      activeSources.delete(voice);
     }, (duration + 0.5) * 1000);
   } catch {}
 }
 
 export async function playCorrect() {
   await ensureLoaded();
-  if (Math.random() < 0.25) {
+  // if (Math.random() < 0.25) {
     playBuffer(brideBuffer);
-  } else {
-    playBuffer(correctBuffer);
-  }
+  // } else {
+  //   playBuffer(correctBuffer);
+  // }
 }
 
 export async function playIncorrect() {
