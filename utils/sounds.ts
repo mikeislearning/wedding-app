@@ -44,18 +44,16 @@ function ensureLoaded(): Promise<void> {
 export function stopAll() {
   if (!ctx) return;
   const now = ctx.currentTime;
-  activeSources.forEach(({ source, gain }) => {
+  activeSources.forEach(({ gain }) => {
     try {
-      // Anchor current gain value, then ramp to 0 so the native source
-      // is silent before we stop it (abrupt stops mid-playback crash).
+      // Fade to silence and let the buffer play out naturally.
+      // Calling source.stop() mid-buffer crashes AVAudioEngine on physical iOS devices.
       gain.gain.setValueAtTime(gain.gain.value, now);
       gain.gain.linearRampToValueAtTime(0, now + FADE_SECONDS);
     } catch {}
-    try {
-      source.stop(now + FADE_SECONDS + 0.01);
-    } catch {}
   });
-  activeSources.clear();
+  // Don't clear activeSources here — the per-voice setTimeout in playBuffer
+  // removes each entry once its buffer naturally ends.
 }
 
 function playBuffer(buffer: AudioBuffer | null) {
