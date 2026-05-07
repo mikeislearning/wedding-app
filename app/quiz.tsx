@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { colors } from '../constants/theme';
 import { getRandomQuestions, Question } from '../utils/quiz';
 import { getQuestionImage } from '../utils/questionImages';
-import { playCorrect, playIncorrect, playTap, stopAll } from '../utils/sounds';
+import { playCorrect, playIncorrect, playTap } from '../utils/sounds';
 import { getSession, saveSession } from '../utils/storage';
 import Confetti from '../components/Confetti';
 
@@ -174,7 +174,8 @@ export default function QuizScreen() {
   };
 
   const handleNext = () => {
-    stopAll();
+    // Don't try to stop in-flight audio — every approach (source.stop, gain
+    // ramp) has crashed AVAudioEngine on iOS. Let buffers play out naturally.
     const now = Date.now();
     accumulatedMsRef.current += now - runStartRef.current;
     runStartRef.current = now;
