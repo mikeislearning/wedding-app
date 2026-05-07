@@ -55,35 +55,42 @@ export default function Confetti({ active }: { active: boolean }) {
 
       return Animated.sequence([
         Animated.delay(delay),
-        Animated.parallel([
-          Animated.timing(p.y, {
-            toValue: SCREEN_H + 80,
-            duration,
-            useNativeDriver: true,
-          }),
-          Animated.timing(p.x, {
-            toValue: drift,
-            duration,
-            useNativeDriver: true,
-          }),
-          Animated.timing(p.rotate, {
-            toValue: 4 + Math.random() * 8,
-            duration,
-            useNativeDriver: true,
-          }),
-          Animated.sequence([
-            Animated.delay(duration * 0.65),
-            Animated.timing(p.opacity, {
-              toValue: 0,
-              duration: duration * 0.35,
+        // stopTogether: false breaks the recursive stop() cascade in
+        // Animated.parallel. With the default (true), calling .stop() on a
+        // parent parallel triggers each child's stop callback, which then
+        // re-invokes the parent's stop() — blowing the JS stack when nested.
+        Animated.parallel(
+          [
+            Animated.timing(p.y, {
+              toValue: SCREEN_H + 80,
+              duration,
               useNativeDriver: true,
             }),
-          ]),
-        ]),
+            Animated.timing(p.x, {
+              toValue: drift,
+              duration,
+              useNativeDriver: true,
+            }),
+            Animated.timing(p.rotate, {
+              toValue: 4 + Math.random() * 8,
+              duration,
+              useNativeDriver: true,
+            }),
+            Animated.sequence([
+              Animated.delay(duration * 0.65),
+              Animated.timing(p.opacity, {
+                toValue: 0,
+                duration: duration * 0.35,
+                useNativeDriver: true,
+              }),
+            ]),
+          ],
+          { stopTogether: false },
+        ),
       ]);
     });
 
-    const composite = Animated.parallel(animations);
+    const composite = Animated.parallel(animations, { stopTogether: false });
     runningAnim.current = composite;
     composite.start(() => {
       if (runningAnim.current === composite) runningAnim.current = null;

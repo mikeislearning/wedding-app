@@ -37,14 +37,14 @@ function FloatingItem({ element }: { element: FloatingElement }) {
   const translateX = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const startAnimation = () => {
-      translateY.setValue(0);
-      translateX.setValue(0);
+    translateY.setValue(0);
+    translateX.setValue(0);
 
-      Animated.loop(
-        Animated.sequence([
-          Animated.delay(element.delay),
-          Animated.parallel([
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.delay(element.delay),
+        Animated.parallel(
+          [
             Animated.timing(translateY, {
               toValue: -(SCREEN_HEIGHT + 40),
               duration: element.duration,
@@ -67,12 +67,18 @@ function FloatingItem({ element }: { element: FloatingElement }) {
                 useNativeDriver: true,
               }),
             ]),
-          ]),
-        ]),
-      ).start();
-    };
+          ],
+          { stopTogether: false },
+        ),
+      ]),
+    );
+    loop.start();
 
-    startAnimation();
+    return () => {
+      loop.stop();
+      translateY.stopAnimation();
+      translateX.stopAnimation();
+    };
   }, []);
 
   return (

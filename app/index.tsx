@@ -35,22 +35,35 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    Animated.sequence([
-      Animated.parallel([
-        Animated.spring(titleScale, { toValue: 1, tension: 50, friction: 7, useNativeDriver: true }),
-        Animated.timing(titleOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
-      ]),
-      Animated.parallel([
-        Animated.spring(photoScale, { toValue: 1, tension: 50, friction: 8, useNativeDriver: true }),
-        Animated.timing(photoOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
-      ]),
-      Animated.parallel([
-        Animated.timing(buttonsOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
-        Animated.timing(buttonsSlide, { toValue: 0, duration: 400, useNativeDriver: true }),
-      ]),
-    ]).start(() => {
-      setShowConfetti(true);
+    const anim = Animated.sequence([
+      Animated.parallel(
+        [
+          Animated.spring(titleScale, { toValue: 1, tension: 50, friction: 7, useNativeDriver: true }),
+          Animated.timing(titleOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
+        ],
+        { stopTogether: false },
+      ),
+      Animated.parallel(
+        [
+          Animated.spring(photoScale, { toValue: 1, tension: 50, friction: 8, useNativeDriver: true }),
+          Animated.timing(photoOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+        ],
+        { stopTogether: false },
+      ),
+      Animated.parallel(
+        [
+          Animated.timing(buttonsOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+          Animated.timing(buttonsSlide, { toValue: 0, duration: 400, useNativeDriver: true }),
+        ],
+        { stopTogether: false },
+      ),
+    ]);
+    anim.start(({ finished }) => {
+      // `finished` is false when stop() is called during cleanup. Don't run
+      // the post-animation effect on a torn-down component.
+      if (finished) setShowConfetti(true);
     });
+    return () => anim.stop();
   }, []);
 
   return (

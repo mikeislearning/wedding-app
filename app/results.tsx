@@ -103,32 +103,52 @@ export default function ResultsScreen() {
       clearSession().catch(() => {});
     }
 
-    Animated.sequence([
+    let secondAnim: Animated.CompositeAnimation | null = null;
+
+    const firstAnim = Animated.sequence([
       Animated.timing(headerOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
-      Animated.parallel([
-        Animated.spring(nameScale, { toValue: 1, tension: 60, friction: 7, useNativeDriver: true }),
-        Animated.timing(nameOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
-      ]),
-      Animated.parallel([
-        Animated.spring(scoreScale, { toValue: 1, tension: 50, friction: 6, useNativeDriver: true }),
-        Animated.timing(scoreOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
-      ]),
-    ]).start(() => {
+      Animated.parallel(
+        [
+          Animated.spring(nameScale, { toValue: 1, tension: 60, friction: 7, useNativeDriver: true }),
+          Animated.timing(nameOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
+        ],
+        { stopTogether: false },
+      ),
+      Animated.parallel(
+        [
+          Animated.spring(scoreScale, { toValue: 1, tension: 50, friction: 6, useNativeDriver: true }),
+          Animated.timing(scoreOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
+        ],
+        { stopTogether: false },
+      ),
+    ]);
+
+    firstAnim.start(({ finished }) => {
+      if (!finished) return;
       // Always show confetti — it's a celebration!
       setShowConfetti(true);
       if (score >= 7) {
         playCelebration();
       }
       setShowMessage(true);
-      Animated.sequence([
+      secondAnim = Animated.sequence([
         Animated.delay(200),
-        Animated.parallel([
-          Animated.timing(messageOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
-          Animated.timing(messageSlide, { toValue: 0, duration: 500, useNativeDriver: true }),
-        ]),
+        Animated.parallel(
+          [
+            Animated.timing(messageOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+            Animated.timing(messageSlide, { toValue: 0, duration: 500, useNativeDriver: true }),
+          ],
+          { stopTogether: false },
+        ),
         Animated.timing(buttonOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
-      ]).start();
+      ]);
+      secondAnim.start();
     });
+
+    return () => {
+      firstAnim.stop();
+      secondAnim?.stop();
+    };
   }, []);
 
   const message = getResultMessage(score);

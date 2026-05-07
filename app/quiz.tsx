@@ -135,10 +135,13 @@ export default function QuizScreen() {
     if (!currentQuestion) return;
     cardOpacity.setValue(0);
     cardSlide.setValue(30);
-    Animated.parallel([
-      Animated.timing(cardOpacity, { toValue: 1, duration: 350, useNativeDriver: true }),
-      Animated.timing(cardSlide, { toValue: 0, duration: 350, useNativeDriver: true }),
-    ]).start();
+    Animated.parallel(
+      [
+        Animated.timing(cardOpacity, { toValue: 1, duration: 350, useNativeDriver: true }),
+        Animated.timing(cardSlide, { toValue: 0, duration: 350, useNativeDriver: true }),
+      ],
+      { stopTogether: false },
+    ).start();
   }, [currentIndex, questions.length > 0]);
 
   // Smooth progress bar
