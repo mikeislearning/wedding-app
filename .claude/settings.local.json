@@ -33,7 +33,8 @@
       "Bash(afplay *)",
       "Bash(pnpm exec *)",
       "Bash(ipconfig getifaddr *)",
-      "Bash(pnpm expo *)"
+      "Bash(pnpm expo *)",
+      "Bash(afinfo /Users/michaelmacpherson/Documents/codings/wedding-app/assets/sounds/correct-3.wav)"
     ]
   }
 }
