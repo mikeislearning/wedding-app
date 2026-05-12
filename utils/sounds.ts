@@ -2,21 +2,16 @@ import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-aud
 
 setAudioModeAsync({ playsInSilentMode: true }).catch(() => {});
 
-const correctPlayers: AudioPlayer[] = [
-  createAudioPlayer(require('../assets/sounds/correct-1.wav')),
-  createAudioPlayer(require('../assets/sounds/correct-2.wav')),
-  createAudioPlayer(require('../assets/sounds/correct-3.wav')),
-  createAudioPlayer(require('../assets/sounds/correct-4.wav')),
-];
-const incorrectPlayer = createAudioPlayer(require('../assets/sounds/incorrect.wav'));
-const tapPlayer = createAudioPlayer(require('../assets/sounds/tap.wav'));
-const celebrationPlayer = createAudioPlayer(require('../assets/sounds/celebration.wav'));
+const correctPlayer = createAudioPlayer(require('../assets/sounds/correct.wav'));
+// const incorrectPlayer = createAudioPlayer(require('../assets/sounds/incorrect.wav'));
+// const tapPlayer = createAudioPlayer(require('../assets/sounds/tap.wav'));
+// const celebrationPlayer = createAudioPlayer(require('../assets/sounds/celebration.wav'));
 
 const allPlayers: AudioPlayer[] = [
-  ...correctPlayers,
-  incorrectPlayer,
-  tapPlayer,
-  celebrationPlayer,
+  correctPlayer,
+  // incorrectPlayer,
+  // tapPlayer,
+  // celebrationPlayer,
 ];
 
 const CORRECT_HOLD_MS = 5000;
@@ -93,25 +88,24 @@ export function stopAll() {
 
 export function playCorrect() {
   stopAll();
-  const player = correctPlayers[Math.floor(Math.random() * correctPlayers.length)];
-  play(player);
+  play(correctPlayer);
   fadeHoldTimer = setTimeout(() => {
     fadeHoldTimer = null;
-    fadeOutAndPause(player);
+    fadeOutAndPause(correctPlayer);
   }, CORRECT_HOLD_MS);
 }
 
 export function playIncorrect() {
-  stopAll();
-  play(incorrectPlayer);
+  // stopAll();
+  // play(incorrectPlayer);
 }
 
 export function playTap() {
-  stopAll();
-  play(tapPlayer);
+  // stopAll();
+  // play(tapPlayer);
 }
 
 export function playCelebration() {
-  stopAll();
-  play(celebrationPlayer);
+  // stopAll();
+  // play(celebrationPlayer);
 }
