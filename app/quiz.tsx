@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { colors } from '../constants/theme';
 import { getRandomQuestions, Question } from '../utils/quiz';
 import { getQuestionImage } from '../utils/questionImages';
-import { playCorrect, playIncorrect, playTap } from '../utils/sounds';
+import { playCorrect, playIncorrect, playTap, stopAll } from '../utils/sounds';
 import { getSession, saveSession } from '../utils/storage';
 import Confetti from '../components/Confetti';
 
@@ -135,10 +135,13 @@ export default function QuizScreen() {
     if (!currentQuestion) return;
     cardOpacity.setValue(0);
     cardSlide.setValue(30);
-    Animated.parallel([
-      Animated.timing(cardOpacity, { toValue: 1, duration: 350, useNativeDriver: true }),
-      Animated.timing(cardSlide, { toValue: 0, duration: 350, useNativeDriver: true }),
-    ]).start();
+    Animated.parallel(
+      [
+        Animated.timing(cardOpacity, { toValue: 1, duration: 350, useNativeDriver: true }),
+        Animated.timing(cardSlide, { toValue: 0, duration: 350, useNativeDriver: true }),
+      ],
+      { stopTogether: false },
+    ).start();
   }, [currentIndex, questions.length > 0]);
 
   // Smooth progress bar
@@ -157,7 +160,7 @@ export default function QuizScreen() {
   const handleSelect = (option: string) => {
     if (answered) return;
     setSelectedAnswer(option);
-    playTap().catch(() => {});
+    playTap();
   };
 
   const handleConfirm = () => {
@@ -167,15 +170,25 @@ export default function QuizScreen() {
     if (isCorrect) {
       setScore(prev => prev + 1);
       setShowConfetti(true);
-      playCorrect().catch(() => {});
+      playCorrect();
     } else {
-      playIncorrect().catch(() => {});
+      playIncorrect();
     }
   };
 
   const handleNext = () => {
-    // Don't try to stop in-flight audio — every approach (source.stop, gain
-    // ramp) has crashed AVAudioEngine on iOS. Let buffers play out naturally.
+    // Halt every in-flight effect from the previous question before we
+    // mutate state. Audio that's still playing (or animations still
+    // ticking) when the next question's effects fire has been the source
+    // of the TestFlight-only AVAudioEngine crash.
+    stopAll();
+    setShowConfetti(false);
+    cardOpacity.stopAnimation();
+    cardSlide.stopAnimation();
+    progressAnim.stopAnimation();
+    nextButtonOpacity.stopAnimation();
+    nextButtonOpacity.setValue(0);
+
     const now = Date.now();
     accumulatedMsRef.current += now - runStartRef.current;
     runStartRef.current = now;
@@ -186,8 +199,6 @@ export default function QuizScreen() {
         params: { name, score: score.toString(), time: elapsed.toString() },
       });
     } else {
-      nextButtonOpacity.setValue(0);
-      setShowConfetti(false);
       setCurrentIndex(prev => prev + 1);
       setSelectedAnswer(null);
       setAnswered(false);

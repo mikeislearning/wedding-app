@@ -42,7 +42,15 @@
     "plugins": [
       "expo-font",
       "expo-router",
-      "react-native-audio-api"
+      "expo-audio",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "wedding-app",
+          "organization": "spotlightly"
+        }
+      ]
     ]
   }
 }

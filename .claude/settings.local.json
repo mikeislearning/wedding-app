@@ -32,7 +32,9 @@
       "Bash(grep -E \"\\(example|apps\\).*\\\\.\\(ts|tsx\\)$\")",
       "Bash(afplay *)",
       "Bash(pnpm exec *)",
-      "Bash(ipconfig getifaddr *)"
+      "Bash(ipconfig getifaddr *)",
+      "Bash(pnpm expo *)",
+      "Bash(afinfo /Users/michaelmacpherson/Documents/codings/wedding-app/assets/sounds/correct-3.wav)"
     ]
   }
 }

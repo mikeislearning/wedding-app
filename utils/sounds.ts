@@ -1,99 +1,111 @@
-import { AudioContext, AudioBuffer, AudioBufferSourceNode, GainNode } from 'react-native-audio-api';
+import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-audio';
 
-const correctAsset = require('../assets/sounds/correct.wav');
-const incorrectAsset = require('../assets/sounds/incorrect.wav');
-const tapAsset = require('../assets/sounds/tap.wav');
-const celebrationAsset = require('../assets/sounds/celebration.wav');
-const brideAsset = require('../assets/sounds/bride.wav');
+setAudioModeAsync({ playsInSilentMode: true }).catch(() => {});
 
-let ctx: AudioContext | null = null;
-let correctBuffer: AudioBuffer | null = null;
-let incorrectBuffer: AudioBuffer | null = null;
-let tapBuffer: AudioBuffer | null = null;
-let celebrationBuffer: AudioBuffer | null = null;
-let brideBuffer: AudioBuffer | null = null;
+const correctPlayer = createAudioPlayer(require('../assets/sounds/correct.wav'));
+// const incorrectPlayer = createAudioPlayer(require('../assets/sounds/incorrect.wav'));
+// const tapPlayer = createAudioPlayer(require('../assets/sounds/tap.wav'));
+// const celebrationPlayer = createAudioPlayer(require('../assets/sounds/celebration.wav'));
 
-type ActiveVoice = { source: AudioBufferSourceNode; gain: GainNode };
-const activeSources: Set<ActiveVoice> = new Set();
+const allPlayers: AudioPlayer[] = [
+  correctPlayer,
+  // incorrectPlayer,
+  // tapPlayer,
+  // celebrationPlayer,
+];
 
-const FADE_SECONDS = 0.08;
+const CORRECT_HOLD_MS = 5000;
+const CORRECT_FADE_MS = 600;
+const FADE_STEPS = 12;
 
-let loadPromise: Promise<void> | null = null;
+let fadeHoldTimer: ReturnType<typeof setTimeout> | null = null;
+let fadeStepTimer: ReturnType<typeof setInterval> | null = null;
 
-function ensureLoaded(): Promise<void> {
-  if (!loadPromise) {
-    loadPromise = (async () => {
-      ctx = new AudioContext();
-      const [c, i, t, cel, b] = await Promise.all([
-        ctx.decodeAudioData(correctAsset),
-        ctx.decodeAudioData(incorrectAsset),
-        ctx.decodeAudioData(tapAsset),
-        ctx.decodeAudioData(celebrationAsset),
-        ctx.decodeAudioData(brideAsset),
-      ]);
-      correctBuffer = c;
-      incorrectBuffer = i;
-      tapBuffer = t;
-      celebrationBuffer = cel;
-      brideBuffer = b;
-    })();
+function clearFade() {
+  if (fadeHoldTimer) {
+    clearTimeout(fadeHoldTimer);
+    fadeHoldTimer = null;
   }
-  return loadPromise;
+  if (fadeStepTimer) {
+    clearInterval(fadeStepTimer);
+    fadeStepTimer = null;
+  }
 }
 
-export function stopAll() {
-  if (!ctx) return;
-  const now = ctx.currentTime;
-  activeSources.forEach(({ gain }) => {
-    try {
-      // Fade to silence and let the buffer play out naturally.
-      // Calling source.stop() mid-buffer crashes AVAudioEngine on physical iOS devices.
-      gain.gain.setValueAtTime(gain.gain.value, now);
-      gain.gain.linearRampToValueAtTime(0, now + FADE_SECONDS);
-    } catch {}
-  });
-  // Don't clear activeSources here — the per-voice setTimeout in playBuffer
-  // removes each entry once its buffer naturally ends.
-}
-
-function playBuffer(buffer: AudioBuffer | null) {
-  if (!ctx || !buffer) return;
+// Pause first to bring the player to a clean state before re-seeking and
+// re-playing. Avoids re-entrant play() races that have crashed AVAudioEngine
+// on TestFlight builds.
+function play(player: AudioPlayer) {
   try {
-    const source = ctx.createBufferSource();
-    const gain = ctx.createGain();
-    source.buffer = buffer;
-    source.connect(gain);
-    gain.connect(ctx.destination);
-    const voice: ActiveVoice = { source, gain };
-    activeSources.add(voice);
-    source.start();
-    const duration = buffer.duration;
-    setTimeout(() => {
-      activeSources.delete(voice);
-    }, (duration + 0.5) * 1000);
+    player.pause();
+  } catch {}
+  try {
+    player.seekTo(0);
+  } catch {}
+  try {
+    player.volume = 1;
+  } catch {}
+  try {
+    player.play();
   } catch {}
 }
 
-export async function playCorrect() {
-  await ensureLoaded();
-  if (Math.random() < 0.25) {
-    playBuffer(brideBuffer);
-  } else {
-    playBuffer(correctBuffer);
+function fadeOutAndPause(player: AudioPlayer) {
+  let step = 0;
+  fadeStepTimer = setInterval(() => {
+    step++;
+    const v = Math.max(0, 1 - step / FADE_STEPS);
+    try {
+      player.volume = v;
+    } catch {}
+    if (step >= FADE_STEPS) {
+      if (fadeStepTimer) clearInterval(fadeStepTimer);
+      fadeStepTimer = null;
+      try {
+        player.pause();
+      } catch {}
+      try {
+        player.volume = 1;
+      } catch {}
+    }
+  }, CORRECT_FADE_MS / FADE_STEPS);
+}
+
+export function stopAll() {
+  clearFade();
+  for (const p of allPlayers) {
+    try {
+      p.pause();
+    } catch {}
+    try {
+      p.seekTo(0);
+    } catch {}
+    try {
+      p.volume = 1;
+    } catch {}
   }
 }
 
-export async function playIncorrect() {
-  await ensureLoaded();
-  playBuffer(incorrectBuffer);
+export function playCorrect() {
+  stopAll();
+  play(correctPlayer);
+  fadeHoldTimer = setTimeout(() => {
+    fadeHoldTimer = null;
+    fadeOutAndPause(correctPlayer);
+  }, CORRECT_HOLD_MS);
 }
 
-export async function playTap() {
-  await ensureLoaded();
-  playBuffer(tapBuffer);
+export function playIncorrect() {
+  // stopAll();
+  // play(incorrectPlayer);
 }
 
-export async function playCelebration() {
-  await ensureLoaded();
-  playBuffer(celebrationBuffer);
+export function playTap() {
+  // stopAll();
+  // play(tapPlayer);
+}
+
+export function playCelebration() {
+  // stopAll();
+  // play(celebrationPlayer);
 }
